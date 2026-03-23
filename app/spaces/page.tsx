@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
 
 export default function PropertyPage() {
   const [color, setColor] = useState<"red" | "green" | "blue" | "white" | "cream">("red");
-  const [prevColor, setPrevColor] = useState(color);
+  const [activeColor, setActiveColor] = useState<typeof color>("red");
+  const [nextColor, setNextColor] = useState<typeof color | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   const images = {
     red: "/images/living-red.jpg",
@@ -18,32 +18,19 @@ export default function PropertyPage() {
     cream: "/images/living-cream.jpg",
   };
 
-  // 🔥 PRELOAD IMAGES
-  useEffect(() => {
-    Object.entries(images).forEach(([key, src]) => {
-      const img = new Image();
-      img.src = src;
-
-      img.onload = () => {
-        setLoadedImages((prev) => ({
-          ...prev,
-          [key]: true,
-        }));
-      };
-    });
-  }, []);
-
   const handleColorChange = (newColor: typeof color) => {
     if (newColor === color) return;
 
-    // 🚫 BLOCK animation if not loaded
-    if (!loadedImages[newColor]) return;
+    setActiveColor(newColor); // 🔥 instant UI feedback
 
-    setPrevColor(color);
-    setColor(newColor);
+    if (isAnimating) return;
+
+    setNextColor(newColor);
     setIsAnimating(true);
 
     setTimeout(() => {
+      setColor(newColor);
+      setNextColor(null);
       setIsAnimating(false);
     }, 700);
   };
@@ -58,7 +45,10 @@ export default function PropertyPage() {
         <div className="max-w-2xl">
           <FadeUp>
             <h1 className="text-4xl md:text-6xl font-light tracking-tight leading-tight">
-              Explore Living Spaces
+              Explore{" "}
+              <span className="serif italic">
+                Living Spaces
+              </span>
             </h1>
           </FadeUp>
 
@@ -103,10 +93,12 @@ export default function PropertyPage() {
                     <button
                       key={c}
                       onClick={() => handleColorChange(c as typeof color)}
-                      disabled={!loadedImages[c]}
                       className={`w-10 h-10 rounded-full border border-black/10 shadow-sm transition-all duration-300
-                      ${!loadedImages[c] ? "opacity-30 cursor-not-allowed" : ""}
-                      ${color === c ? "scale-110 ring-2 ring-black ring-offset-2" : "hover:scale-110"}`}
+                      ${
+                        activeColor === c
+                          ? "scale-110 ring-2 ring-neutral-400 ring-offset-2 ring-offset-[#f8f8f8]"
+                          : "hover:scale-110"
+                      }`}
                       style={{
                         backgroundColor:
                           c === "cream" ? "#f5f5dc" : c,
@@ -130,17 +122,19 @@ export default function PropertyPage() {
           <FadeUp delay={0.3}>
             <div className="relative h-[540px] md:h-[640px] rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
 
-              {/* OLD IMAGE */}
-              <img
-                src={images[prevColor]}
-                className={`absolute inset-0 w-full h-full object-cover ${isAnimating ? "animate-cover" : ""}`}
-              />
-
-              {/* NEW IMAGE */}
+              {/* BASE IMAGE */}
               <img
                 src={images[color]}
-                className={`absolute inset-0 w-full h-full object-cover ${isAnimating ? "animate-reveal" : ""}`}
+                className="absolute inset-0 w-full h-full object-cover"
               />
+
+              {/* REVEAL IMAGE */}
+              {nextColor && (
+                <img
+                  src={images[nextColor]}
+                  className="absolute inset-0 w-full h-full object-cover animate-reveal"
+                />
+              )}
 
             </div>
           </FadeUp>
