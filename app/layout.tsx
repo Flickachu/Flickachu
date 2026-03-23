@@ -6,6 +6,7 @@ import {
 } from "next/font/google";
 
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import Footer from "./components/Footer";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body className="bg-[#f6f3ee] text-[#1a1a1a] antialiased font-sans">
         <SmoothScrollProvider>
           {children}
+          <Footer />
         </SmoothScrollProvider>
       </body>
     </html>

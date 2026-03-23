@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation"; // ✅ ADDED
 import Navbar from "./components/Navbar";
 import FadeUp from "./components/FadeUp";
 import gsap from "gsap";
@@ -30,100 +31,103 @@ async function getPosts() {
 
 export default function Home() {
   const [posts, setPosts] = useState<any[]>([]);
+  const pathname = usePathname(); // ✅ ADDED
 
-useEffect(() => {
-  const ctx = gsap.context(() => {
+  // ✅ BARBA-STYLE RESET (ONLY ADDITION)
+  useEffect(() => {
+    document.documentElement.classList.remove("is-transitioning");
+  }, [pathname]);
 
-    // FETCH POSTS
-    getPosts().then(setPosts);
+  useEffect(() => {
+    const ctx = gsap.context(() => {
 
-    // HERO PARALLAX
-    gsap.to(".hero-img", {
-      scale: 1.15,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero-img",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
+      // FETCH POSTS
+      getPosts().then(setPosts);
 
-    // IMAGE ZOOM
-    gsap.utils.toArray(".project-img").forEach((img: any) => {
-      gsap.fromTo(
-        img,
-        { scale: 1.2 },
-        {
-          scale: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: img,
-            start: "top 85%",
-            end: "bottom 60%",
-            scrub: true,
-          },
-        }
-      );
-    });
-
-    // 🔥 HORIZONTAL SCROLL (ACTUALLY FIXED)
-    const sections = gsap.utils.toArray(".horizontal-wrapper");
-
-    sections.forEach((section: any) => {
-      const getWidth = () => section.scrollWidth - window.innerWidth;
-
-      gsap.to(section, {
-        x: () => -getWidth(),
+      // HERO PARALLAX
+      gsap.to(".hero-img", {
+        scale: 1.15,
         ease: "none",
         scrollTrigger: {
-          trigger: section,
+          trigger: ".hero-img",
           start: "top top",
-          end: () => `+=${getWidth()}`,
+          end: "bottom top",
           scrub: true,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true, // 🔥 REQUIRED
         },
       });
-    });
 
-    // MATERIAL IMAGES
-    gsap.utils.toArray(".material-img").forEach((img: any) => {
-      gsap.fromTo(
-        img,
-        { scale: 1.1 },
-        {
-          scale: 1,
+      // IMAGE ZOOM
+      gsap.utils.toArray(".project-img").forEach((img: any) => {
+        gsap.fromTo(
+          img,
+          { scale: 1.2 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: img,
+              start: "top 85%",
+              end: "bottom 60%",
+              scrub: true,
+            },
+          }
+        );
+      });
+
+      // 🔥 HORIZONTAL SCROLL (ACTUALLY FIXED)
+      const sections = gsap.utils.toArray(".horizontal-wrapper");
+
+      sections.forEach((section: any) => {
+        const getWidth = () => section.scrollWidth - window.innerWidth;
+
+        gsap.to(section, {
+          x: () => -getWidth(),
           ease: "none",
           scrollTrigger: {
-            trigger: img,
-            start: "top 90%",
-            end: "bottom 60%",
+            trigger: section,
+            start: "top top",
+            end: () => `+=${getWidth()}`,
             scrub: true,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
           },
-        }
-      );
+        });
+      });
+
+      // MATERIAL IMAGES
+      gsap.utils.toArray(".material-img").forEach((img: any) => {
+        gsap.fromTo(
+          img,
+          { scale: 1.1 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: img,
+              start: "top 90%",
+              end: "bottom 60%",
+              scrub: true,
+            },
+          }
+        );
+      });
+
     });
 
-  });
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
 
-  // 🔥 HANDLE ZOOM / RESIZE PROPERLY
-  const handleResize = () => {
+    window.addEventListener("resize", handleResize);
     ScrollTrigger.refresh();
-  };
 
-  window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      ctx.revert();
+    };
 
-  // 🔥 FORCE INITIAL CORRECT CALCULATION
-  ScrollTrigger.refresh();
-
-  return () => {
-    window.removeEventListener("resize", handleResize);
-    ctx.revert(); // cleanup GSAP
-  };
-
-}, []);
+  }, []);
 
  return (
   <main className="bg-[#f6f3ee] text-[#1a1a1a]">
@@ -459,73 +463,6 @@ useEffect(() => {
         Start Your Project
       </button>
     </section>
-
-    {/* FOOTER */}
-<footer className="bg-[#0f0f0f] text-white pt-28 pb-10 px-10">
-
-  <div className="max-w-[1400px] mx-auto grid md:grid-cols-4 gap-16">
-
-    {/* BRAND */}
-    <div>
-      <h3 className="text-2xl mb-6 italic serif">Flickachu</h3>
-
-      <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-        Crafting timeless interiors and bespoke furniture with a focus on detail,
-        materiality, and emotion.
-      </p>
-    </div>
-
-    {/* STUDIO */}
-    <div>
-      <p className="text-xs tracking-widest text-gray-500 mb-6 uppercase">
-        Studio
-      </p>
-
-      <ul className="space-y-3 text-sm text-gray-300">
-        <li className="hover:text-white cursor-pointer">About</li>
-        <li className="hover:text-white cursor-pointer">Services</li>
-        <li className="hover:text-white cursor-pointer">Projects</li>
-      </ul>
-    </div>
-
-    {/* CONNECT */}
-    <div>
-      <p className="text-xs tracking-widest text-gray-500 mb-6 uppercase">
-        Connect
-      </p>
-
-      <ul className="space-y-3 text-sm text-gray-300">
-        <li className="hover:text-white cursor-pointer">Contact</li>
-        <li className="hover:text-white cursor-pointer">Instagram</li>
-        <li className="hover:text-white cursor-pointer">LinkedIn</li>
-      </ul>
-    </div>
-
-    {/* CONTACT */}
-    <div>
-      <p className="text-xs tracking-widest text-gray-500 mb-6 uppercase">
-        Contact
-      </p>
-
-      <div className="text-sm text-gray-300 space-y-2">
-        <p>Pune, India</p>
-        <p>hello@flickachu.com</p>
-        <p>+91 98765 43210</p>
-      </div>
-    </div>
-
-  </div>
-
-  {/* DIVIDER */}
-  <div className="border-t border-white/10 mt-16 pt-6 flex justify-between items-center text-sm text-gray-500">
-
-    <p>© 2026 Flickachu. All rights reserved.</p>
-
-    <p className="hidden md:block">Designed & Developed by You</p>
-
-  </div>
-
-</footer>
 
   </main>
 );
