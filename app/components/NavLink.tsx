@@ -6,12 +6,14 @@ type NavLinkProps = {
   href: string;
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void; // ✅ added
 };
 
 export default function NavLink({
   href,
   children,
   className = "",
+  onClick,
 }: NavLinkProps) {
   const router = useRouter();
 
@@ -22,8 +24,10 @@ export default function NavLink({
 
     document.documentElement.classList.add("is-transitioning");
 
-    // small delay so animation starts BEFORE navigation
- router.push(href);
+    // run user onClick (like closing menu)
+    if (onClick) onClick(); // ✅ important
+
+    router.push(href);
   };
 
   return (
