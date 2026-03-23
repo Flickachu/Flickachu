@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
 
@@ -34,7 +34,17 @@ export default function PropertyPage() {
       setIsAnimating(false);
     }, 700);
   };
+const imageCache = useRef<Record<string, HTMLImageElement>>({});
 
+useEffect(() => {
+  Object.entries(images).forEach(([key, src]) => {
+    if (!imageCache.current[key]) {
+      const img = new Image();
+      img.src = src;
+      imageCache.current[key] = img;
+    }
+  });
+}, []);
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-black">
       
