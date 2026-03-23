@@ -20,6 +20,32 @@ html.is-transitioning .page-content {
   transition: opacity 0.2s ease;
   transform: translateY(10px);
 }
+/* 🔥 Reveal Animation (Flickachu) */
+@keyframes revealRight {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes coverRight {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+.animate-reveal {
+  animation: revealRight 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+
+.animate-cover {
+  animation: coverRight 0.7s cubic-bezier(0.22,1,0.36,1);
+}
 /* ---------------- FONTS ---------------- */
 
 .serif {

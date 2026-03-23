@@ -9,6 +9,7 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
   const [lastScroll, setLastScroll] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // SCROLL LOGIC
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
@@ -39,6 +40,15 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScroll]);
+
+  // LOCK BODY SCROLL
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [menuOpen]);
 
   return (
     <>
@@ -79,6 +89,10 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
               Projects
             </NavLink>
 
+            <NavLink href="/spaces" className="hover:opacity-70 transition">
+              Spaces
+            </NavLink>
+
             <NavLink href="/contact" className="hover:opacity-70 transition">
               Contact
             </NavLink>
@@ -104,7 +118,7 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
               className={`md:hidden text-2xl transition ${
                 isScrolled || forceDark ? "text-black" : "text-white"
               }`}
-              onClick={() => setMenuOpen(true)}
+              onClick={() => setMenuOpen((prev) => !prev)}
             >
               ☰
             </button>
@@ -112,59 +126,64 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
         </div>
       </header>
 
-      {/* MOBILE MENU (GLASS) */}
-<div
-  className={`fixed inset-0 z-[999] flex transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
-  ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
->
-  {/* BACKDROP */}
-  <div
-    className={`absolute inset-0 bg-black/30 backdrop-blur-xl transition-opacity duration-500
-    ${menuOpen ? "opacity-100" : "opacity-0"}`}
-    onClick={() => setMenuOpen(false)}
-  />
+      {/* MOBILE MENU */}
+      <div
+        className={`fixed inset-0 z-[999] flex transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
+        ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+      >
+        {/* BACKDROP */}
+        <div
+          className={`absolute inset-0 bg-black/30 backdrop-blur-xl transition-opacity duration-500
+          ${menuOpen ? "opacity-100" : "opacity-0"}`}
+          onClick={() => setMenuOpen(false)}
+        />
 
-  {/* GLASS PANEL */}
-  <div
-    className={`relative ml-auto w-full max-w-sm h-full 
-    bg-white/10 backdrop-blur-2xl border-l border-white/20
-    text-white flex flex-col items-center justify-center gap-10 text-xl tracking-wide
-    transform transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
-    ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
-  >
-    <NavLink href="/about" onClick={() => setMenuOpen(false)}>
-      About
-    </NavLink>
+        {/* PANEL */}
+        <div
+          className={`relative ml-auto w-full max-w-sm h-full 
+          bg-white/10 backdrop-blur-2xl border-l border-white/20
+          shadow-[0_0_40px_rgba(0,0,0,0.25)]
+          text-white flex flex-col items-center justify-center gap-10 text-xl tracking-wide
+          transform transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
+          ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+        >
+          <NavLink href="/about" onClick={() => setMenuOpen(false)}>
+            About
+          </NavLink>
 
-    <NavLink href="/products" onClick={() => setMenuOpen(false)}>
-      Products
-    </NavLink>
+          <NavLink href="/products" onClick={() => setMenuOpen(false)}>
+            Products
+          </NavLink>
 
-    <NavLink href="/projects" onClick={() => setMenuOpen(false)}>
-      Projects
-    </NavLink>
+          <NavLink href="/projects" onClick={() => setMenuOpen(false)}>
+            Projects
+          </NavLink>
 
-    <NavLink href="/contact" onClick={() => setMenuOpen(false)}>
-      Contact
-    </NavLink>
+          <NavLink href="/spaces" onClick={() => setMenuOpen(false)}>
+            Spaces
+          </NavLink>
 
-    <NavLink
-      href="/get-quote"
-      className="mt-6 px-8 py-3 border border-white/40 rounded-full hover:bg-white hover:text-black transition"
-      onClick={() => setMenuOpen(false)}
-    >
-      Get Quote
-    </NavLink>
+          <NavLink href="/contact" onClick={() => setMenuOpen(false)}>
+            Contact
+          </NavLink>
 
-    {/* CLOSE */}
-    <button
-      className="absolute top-8 right-8 text-3xl"
-      onClick={() => setMenuOpen(false)}
-    >
-      ✕
-    </button>
-  </div>
-</div>
+          <NavLink
+            href="/get-quote"
+            className="mt-6 px-8 py-3 border border-white/40 rounded-full hover:bg-white hover:text-black transition"
+            onClick={() => setMenuOpen(false)}
+          >
+            Get Quote
+          </NavLink>
+
+          {/* CLOSE */}
+          <button
+            className="absolute top-8 right-8 text-3xl"
+            onClick={() => setMenuOpen(false)}
+          >
+            ✕
+          </button>
+        </div>
+      </div>
     </>
   );
 }
