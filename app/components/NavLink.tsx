@@ -2,11 +2,17 @@
 
 import { useRouter } from "next/navigation";
 
+type NavLinkProps = {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+};
+
 export default function NavLink({
   href,
   children,
   className = "",
-}) {
+}: NavLinkProps) {
   const router = useRouter();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
