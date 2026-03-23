@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* ---------------- BASE ---------------- */
+
+body {
+  font-family: var(--font-sans), sans-serif;
+  background: #f6f3ee;
+  color: #1a1a1a;
+}
+
+/* ---------------- FONTS ---------------- */
+
+.serif {
+  font-family: var(--font-serif), serif;
+}
+
+.cursive {
+  font-family: var(--font-cursive), cursive;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+/* ---------------- LAYOUT ---------------- */
+html, body {
+  overflow-x: hidden;
+}
+/* ---------------- PREMIUM TOUCHES ---------------- */
+
+/* smoother rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* subtle selection */
+::selection {
+  background: #000;
+  color: #fff;
+}
+
+/* optional: smoother scrolling */
+html {
+  scroll-behavior: smooth;
+}
