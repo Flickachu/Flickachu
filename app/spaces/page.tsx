@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
 
@@ -8,6 +8,7 @@ export default function PropertyPage() {
   const [color, setColor] = useState<"red" | "green" | "blue" | "white" | "cream">("red");
   const [prevColor, setPrevColor] = useState(color);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   const images = {
     red: "/images/living-red.jpg",
@@ -17,8 +18,26 @@ export default function PropertyPage() {
     cream: "/images/living-cream.jpg",
   };
 
+  // 🔥 PRELOAD IMAGES
+  useEffect(() => {
+    Object.entries(images).forEach(([key, src]) => {
+      const img = new Image();
+      img.src = src;
+
+      img.onload = () => {
+        setLoadedImages((prev) => ({
+          ...prev,
+          [key]: true,
+        }));
+      };
+    });
+  }, []);
+
   const handleColorChange = (newColor: typeof color) => {
     if (newColor === color) return;
+
+    // 🚫 BLOCK animation if not loaded
+    if (!loadedImages[newColor]) return;
 
     setPrevColor(color);
     setColor(newColor);
@@ -84,7 +103,9 @@ export default function PropertyPage() {
                     <button
                       key={c}
                       onClick={() => handleColorChange(c as typeof color)}
+                      disabled={!loadedImages[c]}
                       className={`w-10 h-10 rounded-full border border-black/10 shadow-sm transition-all duration-300
+                      ${!loadedImages[c] ? "opacity-30 cursor-not-allowed" : ""}
                       ${color === c ? "scale-110 ring-2 ring-black ring-offset-2" : "hover:scale-110"}`}
                       style={{
                         backgroundColor:
