@@ -9,16 +9,16 @@ body {
 }
 /* 🔥 Page Transition (Flickachu) */
 
-html.is-transitioning body {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-
-body {
+.page-content {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.2s ease, transform 0.4s ease;
+}
+
+html.is-transitioning .page-content {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  transform: translateY(10px);
 }
 /* ---------------- FONTS ---------------- */
 

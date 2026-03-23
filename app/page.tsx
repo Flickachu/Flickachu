@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation"; // ✅ ADDED
 import Navbar from "./components/Navbar";
 import FadeUp from "./components/FadeUp";
@@ -33,6 +33,7 @@ async function getPosts() {
 export default function Home() {
   const [posts, setPosts] = useState<any[]>([]);
   const pathname = usePathname(); // ✅ ADDED
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   // ✅ BARBA-STYLE RESET (ONLY ADDITION)
   useEffect(() => {
@@ -75,27 +76,25 @@ export default function Home() {
         );
       });
 
-      // 🔥 HORIZONTAL SCROLL (ACTUALLY FIXED)
-      const sections = gsap.utils.toArray(".horizontal-wrapper");
+const section = containerRef.current;
 
-      sections.forEach((section: any) => {
-        const getWidth = () => section.scrollWidth - window.innerWidth;
+if (section) {
+  const getWidth = () => section.scrollWidth - window.innerWidth;
 
-        gsap.to(section, {
-          x: () => -getWidth(),
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: () => `+=${getWidth()}`,
-            scrub: true,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-      });
-
+  gsap.to(section, {
+    x: () => -getWidth(),
+    ease: "none",
+    scrollTrigger: {
+      trigger: section,
+      start: "top top",
+      end: () => `+=${getWidth()}`,
+      scrub: true,
+      pin: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+}
       // MATERIAL IMAGES
       gsap.utils.toArray(".material-img").forEach((img: any) => {
         gsap.fromTo(
@@ -337,7 +336,10 @@ export default function Home() {
     </section>
 
 <section className="relative overflow-hidden">
-  <div className="horizontal-wrapper flex w-[400vw] h-screen">
+  <div
+  ref={containerRef}
+  className="horizontal-wrapper flex w-[400vw] h-screen will-change-transform"
+>
 
     {/* PANEL 1 */}
     <div className="w-screen h-screen flex items-center justify-center">
@@ -351,122 +353,128 @@ export default function Home() {
       </div>
     </div>
 
-{/* PANEL 2 — WOOD */}
-<div className="w-screen h-screen flex items-center justify-center">
-  <div className="max-w-5xl w-full px-10">
-    <h3 className="text-3xl mb-10 text-center">
-      Natural <span className="italic serif">Wood</span>
-    </h3>
+    {/* PANEL 2 — WOOD */}
+    <div className="w-screen h-screen flex items-center justify-center">
+      <div className="max-w-5xl w-full px-10">
+        <h3 className="text-3xl mb-10 text-center">
+          Natural <span className="italic serif">Wood</span>
+        </h3>
 
-    <div className="grid md:grid-cols-3 gap-8">
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/wood1.jpg"
-  alt="Wood texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
-      </div>
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/wood2.jpg"
-  alt="Wood texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
-      </div>
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/wood3.jpg"
-  alt="Wood texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/wood1.jpg"
+              alt="Wood texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/wood2.jpg"
+              alt="Wood texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/wood3.jpg"
+              alt="Wood texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-{/* PANEL 3 — LEATHER */}
-<div className="w-screen h-screen flex items-center justify-center">
-  <div className="max-w-5xl w-full px-10">
-    <h3 className="text-3xl mb-10 text-center">
-      Refined <span className="italic serif">Leather</span>
-    </h3>
+    {/* PANEL 3 — LEATHER */}
+    <div className="w-screen h-screen flex items-center justify-center">
+      <div className="max-w-5xl w-full px-10">
+        <h3 className="text-3xl mb-10 text-center">
+          Refined <span className="italic serif">Leather</span>
+        </h3>
 
-    <div className="grid md:grid-cols-3 gap-8">
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/leather1.jpg"
-  alt="Leather texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
-      </div>
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/leather2.jpg"
-  alt="Leather texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
-      </div>
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/leather3.jpg"
-  alt="Leather texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/leather1.jpg"
+              alt="Leather texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/leather2.jpg"
+              alt="Leather texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/leather3.jpg"
+              alt="Leather texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-{/* PANEL 4 — STONE */}
-<div className="w-screen h-screen flex items-center justify-center">
-  <div className="max-w-5xl w-full px-10">
-    <h3 className="text-3xl mb-10 text-center">
-      Stone & <span className="italic serif">Marble</span>
-    </h3>
+    {/* PANEL 4 — STONE */}
+    <div className="w-screen h-screen flex items-center justify-center">
+      <div className="max-w-5xl w-full px-10">
+        <h3 className="text-3xl mb-10 text-center">
+          Stone & <span className="italic serif">Marble</span>
+        </h3>
 
-    <div className="grid md:grid-cols-3 gap-8">
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/stone1.jpg"
-  alt="Stone texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
-      </div>
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/stone2.jpg"
-  alt="Stone texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
-      </div>
-      <div className="overflow-hidden rounded-xl">
-        <Image
-  src="/images/stone3.jpg"
-  alt="Stone texture"
-  width={600}
-  height={400}
-  className="material-img w-full h-[300px] object-cover"
-/>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/stone1.jpg"
+              alt="Stone texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/stone2.jpg"
+              alt="Stone texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+
+          <div className="overflow-hidden rounded-xl">
+            <Image
+              src="/images/stone3.jpg"
+              alt="Stone texture"
+              width={600}
+              height={400}
+              className="material-img w-full h-[300px] object-cover"
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
   </div>
 </section>
@@ -479,14 +487,11 @@ export default function Home() {
 
   <div className="flex justify-center items-center gap-30 flex-wrap">
     {[1,2,3,4].map(i=>(
-<Image
-  key={i}
-  src={`/images/client${i}.png`}
-  alt={`Client ${i}`}
-  width={120}
-  height={80}
-  className="h-16 md:h-20 w-auto opacity-80 grayscale transition duration-300 hover:grayscale-0 hover:opacity-100"
-/>
+      <img
+        key={i}
+        src={`/images/client${i}.png`}
+        className="h-16 md:h-20 opacity-80 grayscale transition duration-300 hover:grayscale-0 hover:opacity-100"
+      />
     ))}
   </div>
 </section>

@@ -23,9 +23,7 @@ export default function NavLink({
     document.documentElement.classList.add("is-transitioning");
 
     // small delay so animation starts BEFORE navigation
-    setTimeout(() => {
-      router.push(href);
-    }, 200);
+ router.push(href);
   };
 
   return (
