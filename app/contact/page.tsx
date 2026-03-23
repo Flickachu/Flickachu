@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
+import Image from "next/image"; // ✅ ADDED
 
 export default function ContactPage() {
   const pathname = usePathname();
@@ -18,29 +19,32 @@ export default function ContactPage() {
       <Navbar />
 
       {/* HERO */}
-<section className="relative h-screen flex items-center overflow-hidden">
+      <section className="relative h-screen flex items-center overflow-hidden">
 
-  <img
-    src="/images/hero.jpg"
-    className="absolute inset-0 w-full h-full object-cover"
-  />
+        <Image
+          src="/images/hero.jpg"
+          alt="Contact hero"
+          fill
+          priority
+          className="object-cover"
+        />
 
-  <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/50" />
 
-  <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
-    <FadeUp>
-      <h1 className="text-7xl md:text-[90px] max-w-4xl">
-        Let’s <span className="italic serif">Talk</span>
-      </h1>
+        <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
+          <FadeUp>
+            <h1 className="text-7xl md:text-[90px] max-w-4xl">
+              Let’s <span className="italic serif">Talk</span>
+            </h1>
 
-      <p className="mt-6 text-white/70 max-w-xl">
-        Whether you’re starting a new project or refining an existing space,
-        we’d love to hear from you.
-      </p>
-    </FadeUp>
-  </div>
+            <p className="mt-6 text-white/70 max-w-xl">
+              Whether you’re starting a new project or refining an existing space,
+              we’d love to hear from you.
+            </p>
+          </FadeUp>
+        </div>
 
-</section>
+      </section>
 
       {/* CONTACT SECTION */}
       <section className="py-32 px-10 max-w-[1400px] mx-auto grid md:grid-cols-2 gap-20">

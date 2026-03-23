@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "../components/Navbar";
-import FadeUp from "../components/FadeUp"; // ✅ ADDED
+import FadeUp from "../components/FadeUp";
+import Image from "next/image"; // ✅ ADDED
 
 export default function ProjectsPage() {
   const pathname = usePathname();
@@ -19,10 +20,15 @@ export default function ProjectsPage() {
 
       {/* HERO */}
       <section className="relative h-screen flex items-center overflow-hidden bg-[#0f0f0f]">
-        <img
+        
+        <Image
           src="/images/project1.jpg"
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
+          alt="Project hero"
+          fill
+          priority
+          className="object-cover opacity-70"
         />
+
         <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
@@ -66,13 +72,18 @@ export default function ProjectsPage() {
           ["about.jpg", "Studio Space — Pune"],
           ["hero.jpg", "Concept Interior — Hyderabad"],
         ].map(([img, title], i) => (
-          <FadeUp key={i} delay={i * 0.1}> {/* ✅ STAGGER */}
+          <FadeUp key={i} delay={i * 0.1}>
             <div className="group">
               <div className="overflow-hidden rounded-2xl">
-                <img
+                
+                <Image
                   src={`/images/${img}`}
+                  alt={title}
+                  width={800}
+                  height={600}
                   className="h-[420px] w-full object-cover transition duration-700 group-hover:scale-105"
                 />
+
               </div>
 
               <p className="mt-4 text-sm text-gray-600">{title}</p>
@@ -86,9 +97,12 @@ export default function ProjectsPage() {
       <section className="py-40 grid md:grid-cols-2 gap-20 px-10 max-w-[1400px] mx-auto">
 
         <FadeUp>
-          <img
+          <Image
             src="/images/featured.jpg"
-            className="rounded-2xl h-[500px] object-cover"
+            alt="Featured project"
+            width={800}
+            height={600}
+            className="rounded-2xl h-[500px] w-full object-cover"
           />
         </FadeUp>
 

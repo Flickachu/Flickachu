@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
+import Image from "next/image"; // ✅ ADDED
 
 export default function AboutPage() {
   const pathname = usePathname();
@@ -18,32 +19,35 @@ export default function AboutPage() {
       <Navbar />
 
       {/* HERO */}
-<section className="relative h-screen flex items-center overflow-hidden">
+      <section className="relative h-screen flex items-center overflow-hidden">
 
-  {/* IMAGE */}
-  <img
-    src="/images/about.jpg"
-    className="absolute inset-0 w-full h-full object-cover"
-  />
+        {/* IMAGE */}
+        <Image
+          src="/images/about.jpg"
+          alt="About hero"
+          fill
+          priority
+          className="object-cover"
+        />
 
-  {/* OVERLAY */}
-  <div className="absolute inset-0 bg-black/60" />
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-black/60" />
 
-  {/* CONTENT */}
-  <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
-    <FadeUp>
-      <h1 className="text-7xl md:text-[90px] max-w-4xl">
-        About <span className="italic serif">Flickachu</span>
-      </h1>
+        {/* CONTENT */}
+        <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
+          <FadeUp>
+            <h1 className="text-7xl md:text-[90px] max-w-4xl">
+              About <span className="italic serif">Flickachu</span>
+            </h1>
 
-      <p className="mt-6 text-white/70 max-w-xl">
-        We design spaces that go beyond aesthetics — creating environments
-        that evoke emotion, comfort, and timeless elegance.
-      </p>
-    </FadeUp>
-  </div>
+            <p className="mt-6 text-white/70 max-w-xl">
+              We design spaces that go beyond aesthetics — creating environments
+              that evoke emotion, comfort, and timeless elegance.
+            </p>
+          </FadeUp>
+        </div>
 
-</section>
+      </section>
 
       {/* STORY */}
       <section className="py-40 max-w-4xl mx-auto px-6 text-center">
@@ -65,8 +69,11 @@ export default function AboutPage() {
       <section className="grid md:grid-cols-2 gap-20 px-10 max-w-[1400px] mx-auto pb-40">
 
         <FadeUp>
-          <img
+          <Image
             src="/images/about.jpg"
+            alt="About section"
+            width={800}
+            height={600}
             className="rounded-2xl h-[500px] object-cover"
           />
         </FadeUp>

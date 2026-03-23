@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import FadeUp from "./components/FadeUp";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -136,7 +137,13 @@ export default function Home() {
 
     {/* HERO */}
     <section className="relative h-screen flex items-center overflow-hidden">
-      <img src="/images/hero.jpg" className="hero-img absolute inset-0 w-full h-full object-cover" />
+      <Image
+  src="/images/hero.jpg"
+  alt="Hero"
+  fill
+  priority
+  className="hero-img object-cover"
+/>
       <div className="absolute inset-0 bg-black/50" />
 
       <div className="relative z-10 max-w-[1400px] mx-auto px-10">
@@ -178,7 +185,13 @@ export default function Home() {
 
     {/* ABOUT */}
     <section id="about" className="py-40 max-w-[1400px] mx-auto px-10 grid md:grid-cols-2 gap-28 items-center">
-      <img src="/images/about.jpg" className="rounded-2xl h-[400px] object-cover" />
+      <Image
+  src="/images/about.jpg"
+  alt="About"
+  width={800}
+  height={600}
+  className="rounded-2xl h-[400px] object-cover"
+/>
       <div>
         <h2 className="text-5xl mb-6">About <span className="italic serif">Us</span></h2>
 
@@ -218,7 +231,12 @@ export default function Home() {
 
     {/* IMAGE BREAK */}
     <section className="relative h-[80vh] overflow-hidden">
-      <img src="/images/project1.jpg" className="project-img absolute inset-0 w-full h-full object-cover" />
+      <Image
+  src="/images/project1.jpg"
+  alt="Project"
+  fill
+  className="project-img object-cover"
+/>
 
       {/* ✅ UPGRADED */}
       <div className="absolute bottom-10 left-10 text-white max-w-md">
@@ -264,7 +282,13 @@ export default function Home() {
 
     {/* FEATURED */}
     <section className="py-40 grid md:grid-cols-2 gap-20 px-10">
-      <img src="/images/featured.jpg" className="project-img rounded-2xl h-[500px] object-cover" />
+      <Image
+  src="/images/featured.jpg"
+  alt="Featured project"
+  width={800}
+  height={600}
+  className="project-img rounded-2xl h-[500px] object-cover"
+/>
 
       <div>
         {/* ✅ ADDED */}
@@ -299,7 +323,13 @@ export default function Home() {
       ].map(([img, title], i) => (
         <div key={i}>
           <div className="overflow-hidden rounded-2xl">
-            <img src={`/images/${img}`} className="project-img h-[420px] object-cover"/>
+            <Image
+  src={`/images/${img}`}
+  alt={title}
+  width={800}
+  height={600}
+  className="project-img h-[420px] object-cover"
+/>
           </div>
           <p className="mt-4 text-sm text-gray-600">{title}</p>
         </div>
@@ -330,13 +360,31 @@ export default function Home() {
 
     <div className="grid md:grid-cols-3 gap-8">
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/wood1.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/wood1.jpg"
+  alt="Wood texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/wood2.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/wood2.jpg"
+  alt="Wood texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/wood3.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/wood3.jpg"
+  alt="Wood texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
     </div>
   </div>
@@ -351,13 +399,31 @@ export default function Home() {
 
     <div className="grid md:grid-cols-3 gap-8">
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/leather1.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/leather1.jpg"
+  alt="Leather texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/leather2.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/leather2.jpg"
+  alt="Leather texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/leather3.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/leather3.jpg"
+  alt="Leather texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
     </div>
   </div>
@@ -372,13 +438,31 @@ export default function Home() {
 
     <div className="grid md:grid-cols-3 gap-8">
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/stone1.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/stone1.jpg"
+  alt="Stone texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/stone2.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/stone2.jpg"
+  alt="Stone texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
       <div className="overflow-hidden rounded-xl">
-        <img src="/images/stone3.jpg" className="material-img w-full h-[300px] object-cover"/>
+        <Image
+  src="/images/stone3.jpg"
+  alt="Stone texture"
+  width={600}
+  height={400}
+  className="material-img w-full h-[300px] object-cover"
+/>
       </div>
     </div>
   </div>
@@ -395,11 +479,14 @@ export default function Home() {
 
   <div className="flex justify-center items-center gap-30 flex-wrap">
     {[1,2,3,4].map(i=>(
-      <img
-        key={i}
-        src={`/images/client${i}.png`}
-        className="h-16 md:h-20 opacity-80 grayscale transition duration-300 hover:grayscale-0 hover:opacity-100"
-      />
+<Image
+  key={i}
+  src={`/images/client${i}.png`}
+  alt={`Client ${i}`}
+  width={120}
+  height={80}
+  className="h-16 md:h-20 w-auto opacity-80 grayscale transition duration-300 hover:grayscale-0 hover:opacity-100"
+/>
     ))}
   </div>
 </section>

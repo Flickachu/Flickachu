@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
+import Image from "next/image"; // ✅ ADDED
 
 export default function ProductsPage() {
   const pathname = usePathname();
@@ -18,29 +19,32 @@ export default function ProductsPage() {
       <Navbar />
 
       {/* HERO */}
-<section className="relative h-screen flex items-center overflow-hidden">
+      <section className="relative h-screen flex items-center overflow-hidden">
 
-  <img
-    src="/images/project2.jpg"
-    className="absolute inset-0 w-full h-full object-cover"
-  />
+        <Image
+          src="/images/project2.jpg"
+          alt="Products hero"
+          fill
+          priority
+          className="object-cover"
+        />
 
-  <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/60" />
 
-  <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
-    <FadeUp>
-      <h1 className="text-7xl md:text-[90px] max-w-4xl">
-        Our <span className="italic serif">Products</span>
-      </h1>
+        <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
+          <FadeUp>
+            <h1 className="text-7xl md:text-[90px] max-w-4xl">
+              Our <span className="italic serif">Products</span>
+            </h1>
 
-      <p className="mt-6 text-white/70 max-w-xl">
-        Bespoke furniture and interior solutions crafted with precision,
-        material integrity, and timeless aesthetics.
-      </p>
-    </FadeUp>
-  </div>
+            <p className="mt-6 text-white/70 max-w-xl">
+              Bespoke furniture and interior solutions crafted with precision,
+              material integrity, and timeless aesthetics.
+            </p>
+          </FadeUp>
+        </div>
 
-</section>
+      </section>
 
       {/* PRODUCT GRID */}
       <section className="py-32 px-10 max-w-[1400px] mx-auto grid md:grid-cols-3 gap-16">
@@ -56,10 +60,15 @@ export default function ProductsPage() {
           <FadeUp key={i} delay={i * 0.1}>
             <div className="group">
               <div className="overflow-hidden rounded-2xl">
-                <img
+
+                <Image
                   src={`/images/${img}`}
+                  alt={title}
+                  width={800}
+                  height={600}
                   className="h-[420px] w-full object-cover transition duration-700 group-hover:scale-105"
                 />
+
               </div>
 
               <p className="mt-4 text-sm text-gray-600">{title}</p>

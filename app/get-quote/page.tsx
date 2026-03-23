@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
+import Image from "next/image"; // ✅ ADDED
 
 export default function QuotePage() {
   const pathname = usePathname();
@@ -20,9 +21,12 @@ export default function QuotePage() {
       {/* HERO */}
       <section className="relative h-screen flex items-center overflow-hidden">
 
-        <img
+        <Image
           src="/images/project3.jpg"
-          className="absolute inset-0 w-full h-full object-cover"
+          alt="Get quote hero"
+          fill
+          priority
+          className="object-cover"
         />
 
         <div className="absolute inset-0 bg-black/50" />
