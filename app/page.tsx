@@ -7,7 +7,7 @@ import FadeUp from "./components/FadeUp";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-
+import Link from "next/link";
 gsap.registerPlugin(ScrollTrigger);
 
 async function getPosts() {
@@ -159,9 +159,13 @@ if (section) {
           </p>
 
           {/* ✅ ADDED */}
-          <button className="mt-8 px-8 py-4 border border-white rounded-full text-white hover:bg-white hover:text-black transition">
-            Get Consultation
-          </button>
+
+
+<Link href="/consultation">
+  <button className="mt-8 px-8 py-4 border border-white rounded-full text-white hover:bg-white hover:text-black transition">
+    Get Consultation
+  </button>
+</Link>
         </FadeUp>
       </div>
     </section>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import NavLink from "./NavLink";
 
-export default function Navbar() {
+export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNav, setShowNav] = useState(true);
   const [lastScroll, setLastScroll] = useState(0);
@@ -57,49 +57,48 @@ export default function Navbar() {
     >
       <div
         className={`max-w-[1400px] mx-auto flex justify-between items-center px-10 py-5 transition-colors duration-300
-        ${isScrolled ? "text-black" : "text-white"}`}
+        ${isScrolled || forceDark ? "text-black" : "text-white"}`}
       >
-        {/* 🔥 LOGO (TRANSITION ENABLED) */}
+        {/* LOGO */}
         <NavLink
           href="/"
           className={`cursive text-3xl md:text-4xl leading-none tracking-wide transition-all duration-300
-          ${isScrolled ? "text-black" : "text-white"}`}
+          ${isScrolled || forceDark ? "text-black" : "text-white"}`}
         >
           Flickachu
         </NavLink>
 
-<nav className="hidden md:flex gap-10 text-sm tracking-wide">
+        {/* NAV LINKS */}
+        <nav className="hidden md:flex gap-10 text-sm tracking-wide">
+          <NavLink href="/about" className="hover:opacity-70 transition">
+            About
+          </NavLink>
 
-  <NavLink href="/about" className="hover:opacity-70 transition">
-    About
-  </NavLink>
+          <NavLink href="/products" className="hover:opacity-70 transition">
+            Products
+          </NavLink>
 
-  <NavLink href="/products" className="hover:opacity-70 transition">
-    Products
-  </NavLink>
+          <NavLink href="/projects" className="hover:opacity-70 transition">
+            Projects
+          </NavLink>
 
-  <NavLink href="/projects" className="hover:opacity-70 transition">
-    Projects
-  </NavLink>
+          <NavLink href="/contact" className="hover:opacity-70 transition">
+            Contact
+          </NavLink>
+        </nav>
 
-<NavLink href="/contact" className="hover:opacity-70 transition">
-  Contact
-</NavLink>
-
-</nav>
-
-        {/* CTA (still scroll for now) */}
-<NavLink
-  href="/get-quote"
-  className={`px-6 py-2 rounded-full text-xs tracking-wide border transition-all duration-300
-  ${
-    isScrolled
-      ? "border-black hover:bg-black hover:text-white"
-      : "border-white hover:bg-white hover:text-black"
-  }`}
->
-  Get Quote
-</NavLink>
+        {/* CTA */}
+        <NavLink
+          href="/get-quote"
+          className={`px-6 py-2 rounded-full text-xs tracking-wide border transition-all duration-300
+          ${
+            isScrolled || forceDark
+              ? "border-black hover:bg-black hover:text-white"
+              : "border-white hover:bg-white hover:text-black"
+          }`}
+        >
+          Get Quote
+        </NavLink>
       </div>
     </header>
   );
