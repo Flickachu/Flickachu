@@ -1,15 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  Home,
+  Info,
+  Layers,
+  Grid,
+  Box,
+  FileText,
+  Mail,
+} from "lucide-react";
 
 const sections = [
-  { id: "hero", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "services", label: "Services" },
-  { id: "projects", label: "Projects" },
-  { id: "materials", label: "Materials" },
-  { id: "insights", label: "Insights" },
-  { id: "contact", label: "Contact" },
+  { id: "hero", label: "Home", icon: <Home size={18} /> },
+  { id: "about", label: "About", icon: <Info size={18} /> },
+  { id: "services", label: "Services", icon: <Layers size={18} /> },
+  { id: "projects", label: "Projects", icon: <Grid size={18} /> },
+  { id: "materials", label: "Materials", icon: <Box size={18} /> },
+  { id: "insights", label: "Insights", icon: <FileText size={18} /> },
+  { id: "contact", label: "Contact", icon: <Mail size={18} /> },
 ];
 
 export default function SectionNav() {
@@ -28,10 +37,7 @@ export default function SectionNav() {
             setActive(section.id);
           }
         },
-        {
-          root: null,
-          threshold: 0.6, // tweak later if needed
-        }
+        { threshold: 0.5 }
       );
 
       observer.observe(el);
@@ -48,24 +54,31 @@ export default function SectionNav() {
   };
 
   return (
-    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-[9999] flex flex-col gap-3">
       {sections.map((section) => (
-        <div key={section.id} className="group relative flex items-center">
-          
-          {/* Label */}
-          <span className="absolute right-10 opacity-0 group-hover:opacity-100 transition text-sm text-white whitespace-nowrap">
-            {section.label}
-          </span>
+        
+        // 🔥 SLOT (fixed, does NOT resize)
+        <div key={section.id} className="relative w-12 h-12">
 
-          {/* Dot */}
+          {/* 🔥 EXPANDING PILL */}
           <button
             onClick={() => scrollTo(section.id)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              active === section.id
-                ? "bg-white scale-125"
-                : "bg-white/30 hover:bg-white/60"
-            }`}
-          />
+          className={`group absolute right-0 top-0 h-12 rounded-full flex items-center justify-end overflow-hidden transition-all duration-300 ease-out backdrop-blur-md border ${
+  active === section.id
+    ? "bg-blue-600 text-white border-blue-600"
+    : "bg-white/30 text-black border-black/10 hover:bg-white/50"
+} w-12 hover:w-[130px]`}
+          >
+            {/* LABEL (left side) */}
+            <span className="pl-4 text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300">
+              {section.label}
+            </span>
+
+            {/* ICON (right, fixed) */}
+            <div className="w-12 h-12 flex items-center justify-center shrink-0">
+              {section.icon}
+            </div>
+          </button>
         </div>
       ))}
     </div>
