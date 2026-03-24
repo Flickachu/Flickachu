@@ -150,24 +150,41 @@ return (
 
   {/* HERO */}
 <section id="hero" className="relative min-h-[85vh] md:h-screen flex items-center overflow-hidden">
-<Image
-  src={
-    typeof window !== "undefined" && window.innerWidth < 768
-      ? "/images/hero-mobile.jpg"
-      : "/images/hero.jpg"
-  }
-  alt="Hero"
-  fill
-  priority
-  className="hero-img object-cover"
-/>
+
+  {/* IMAGE WRAPPER */}
+  <div className="absolute inset-0">
+
+    {/* Desktop Image */}
+    <div className="hidden md:block absolute inset-0">
+      <Image
+        src="/images/hero.jpg"
+        alt="Hero"
+        fill
+        priority
+        className="hero-img object-cover"
+      />
+    </div>
+
+    {/* Mobile Image */}
+    <div className="block md:hidden absolute inset-0">
+      <Image
+        src="/images/hero-mobile.jpg"
+        alt="Hero"
+        fill
+        priority
+        className="hero-img object-cover object-center"
+      />
+    </div>
+
+  </div>
 
   {/* Overlay */}
   <div className="absolute inset-0 bg-black/50" />
 
+  {/* CONTENT */}
   <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 w-full">
     <FadeUp>
-      <div className="max-w-2xl md:ml-20 text-left">
+      <div className="max-w-[260px] md:max-w-2xl mx-auto md:ml-20 text-center md:text-left">
 
         {/* HEADLINE */}
         <h1 className="text-[36px] md:text-[88px] leading-[1.05] text-white tracking-[-0.02em]">
@@ -183,7 +200,7 @@ return (
 
         {/* CTA */}
         <Link href="/consultation">
-          <button className="relative mt-10 px-8 py-4 border border-white/30 rounded-full text-white overflow-hidden group transition-all duration-300">
+          <button className="relative mt-10 md:mt-10 px-8 py-4 border border-white/30 rounded-full text-white overflow-hidden group transition-all duration-300">
             
             <span className="relative z-10 tracking-wide">
               Start Your Project
@@ -198,6 +215,7 @@ return (
       </div>
     </FadeUp>
   </div>
+
 </section>
 
     {/* EDITORIAL */}
