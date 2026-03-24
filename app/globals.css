@@ -62,8 +62,3 @@ html, body {
   background: #000;
   color: #fff;
 }
-
-/* optional: smoother scrolling */
-html {
-  scroll-behavior: smooth;
-}

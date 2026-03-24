@@ -51,18 +51,22 @@ useEffect(() => {
 
   return () => window.removeEventListener("resize", check);
 }, []);
- useEffect(() => {
+useEffect(() => {
   const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+  // FETCH POSTS (always)
+  getPosts().then(setPosts);
+
+  // 🚫 HARD STOP BEFORE GSAP EVEN RUNS
+  if (isMobile) {
+    // 🔥 kill any accidental triggers
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+    return;
+  }
 
   const ctx = gsap.context(() => {
 
-    // FETCH POSTS
-    getPosts().then(setPosts);
-
-    // 🚫 STOP ALL HEAVY ANIMATIONS ON MOBILE
-    if (isMobile) return;
-
-    // ✅ HERO PARALLAX (DESKTOP ONLY)
+    // HERO
     gsap.to(".hero-img", {
       scale: 1.1,
       ease: "none",
@@ -74,7 +78,7 @@ useEffect(() => {
       },
     });
 
-    // ✅ IMAGE ZOOM (OPTIMIZED)
+    // PROJECT IMAGES
     gsap.utils.toArray(".project-img").forEach((img: any) => {
       gsap.fromTo(
         img,
@@ -92,7 +96,7 @@ useEffect(() => {
       );
     });
 
-    // ✅ HORIZONTAL SCROLL (DESKTOP ONLY)
+    // HORIZONTAL SCROLL
     const section = containerRef.current;
 
     if (section) {
@@ -113,7 +117,7 @@ useEffect(() => {
       });
     }
 
-    // ✅ MATERIAL IMAGES
+    // MATERIAL IMAGES
     gsap.utils.toArray(".material-img").forEach((img: any) => {
       gsap.fromTo(
         img,

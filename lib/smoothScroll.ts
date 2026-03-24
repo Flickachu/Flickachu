@@ -6,29 +6,31 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 🔒 singleton protection
 let lenisInstance: Lenis | null = null;
 
 export function initSmoothScroll(): () => void {
-  // 🚫 Prevent multiple instances
+  // 🔴 HARD BLOCK — MOBILE NEVER ALLOWED
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+  if (isMobile) {
+    console.log("⛔ Lenis BLOCKED on mobile");
+    return () => {};
+  }
+
+  // 🔴 Prevent duplicate instances
   if (lenisInstance) {
     return () => {};
   }
 
-  // 🚫 Double safety: block mobile here too
-  const isMobile = window.matchMedia("(max-width: 768px)").matches;
-  if (isMobile) {
-    return () => {};
-  }
+  console.log("✅ Lenis INITIALIZED");
 
   const lenis = new Lenis({
-    duration: 1.1, // slightly reduced for better performance
+    duration: 1.1,
     smoothWheel: true,
   });
 
   lenisInstance = lenis;
 
-  // Sync ScrollTrigger
   lenis.on("scroll", ScrollTrigger.update);
 
   const raf = (time: number) => {
@@ -39,6 +41,8 @@ export function initSmoothScroll(): () => void {
   gsap.ticker.lagSmoothing(0);
 
   return () => {
+    console.log("🧹 Lenis DESTROYED");
+
     gsap.ticker.remove(raf);
     lenis.destroy();
     lenisInstance = null;
