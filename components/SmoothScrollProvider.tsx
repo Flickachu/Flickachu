@@ -9,22 +9,17 @@ export default function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    // ✅ Detect touch devices (better than width check)
-    const isTouchDevice =
-      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const isMobile = window.innerWidth <= 768;
 
-    // ✅ Respect reduced motion preference
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // 🚫 Disable smooth scroll on mobile / touch / reduced motion
-    if (isTouchDevice || prefersReducedMotion) return;
+    // 🚫 Disable on mobile
+    if (isMobile || prefersReducedMotion) return;
 
-    // ✅ Initialize smooth scroll
     const cleanup = initSmoothScroll();
 
-    // ✅ Cleanup on unmount (VERY important)
     return () => {
       cleanup();
     };
