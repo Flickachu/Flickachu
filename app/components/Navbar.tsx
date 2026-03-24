@@ -110,7 +110,7 @@ if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
             {/* CTA */}
             <NavLink
               href="/get-quote"
-              className={`px-6 py-2 rounded-full text-xs tracking-wide border transition-all duration-300
+              className={`hidden md:block px-6 py-2 rounded-full text-xs tracking-wide border transition-all duration-300
               ${
                 isScrolled || forceDark
                   ? "border-black hover:bg-black hover:text-white"
