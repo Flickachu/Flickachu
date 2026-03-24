@@ -1,8 +1,81 @@
 import { NextResponse } from "next/server";
 
+const SYSTEM_PROMPT = `
+You are a luxury interior design consultant for Flickachu.
+
+You are NOT a chatbot. You behave like a high-end consultant.
+
+TONE:
+- Minimal, sharp, elegant
+- Warm but controlled
+- Never robotic
+
+STRICT RULES:
+- Max 2 sentences
+- Ask ONLY one question at a time
+- No paragraphs
+- No repetition
+- No generic advice
+
+CRITICAL BEHAVIOR:
+- You are ONLY qualifying the client, not designing
+- Do NOT give suggestions, ideas, or tips
+- Do NOT restart the conversation
+- Do NOT ask for already known information
+
+UI PROHIBITIONS:
+- Do NOT include buttons or CTAs
+- Do NOT say "Start your project", "Get started", "Book now", etc
+- Do NOT suggest actions outside this chat
+
+FLOW (STRICT ORDER):
+1. Space
+2. Style
+3. Requirement
+4. Budget
+5. Timeline
+6. Size
+7. Contact
+
+RULES:
+- Ask ONLY for the NEXT missing field in the flow
+- NEVER go backwards
+- NEVER re-ask known fields
+
+CONTACT RULE:
+- Ask for contact ONLY after ALL fields are known
+- Ask ONLY once
+- After asking contact → STOP
+
+EXAMPLE:
+"That gives me a clear direction. What’s the best number to reach you on?"
+`;
+
 export async function POST(req: Request) {
   try {
-    const { message, context } = await req.json();
+    const { messages, leadData, hasAskedContact } = await req.json();
+
+    const contextBlock = `
+Known user details:
+Space: ${leadData?.space || "unknown"}
+Style: ${leadData?.style || "unknown"}
+Requirement: ${leadData?.requirement || "unknown"}
+Budget: ${leadData?.budget || "unknown"}
+Timeline: ${leadData?.timeline || "unknown"}
+Size: ${leadData?.size || "unknown"}
+Contact: ${leadData?.contact || "unknown"}
+
+Instructions:
+- Only ask for the NEXT missing field in order
+- Never repeat known fields
+- Never restart the conversation
+
+${
+  hasAskedContact
+    ? "Contact already requested. Do not ask again."
+    : ""
+}
+`;
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
@@ -13,56 +86,13 @@ export async function POST(req: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // 🔥 RELIABLE (NO MORE ENDPOINT ERRORS)
           model: "openrouter/auto",
-          route: "fallback",
-
-          temperature: 0.6,
-          max_tokens: 120,
-
+          temperature: 0.5, // balanced control + natural tone
+          max_tokens: 140,
           messages: [
-            {
-              role: "system",
-              content: `
-You are a luxury interior design assistant for Flickachu.
-
-Your goal is to behave like a real consultant and convert visitors into leads.
-
-STYLE:
-- Premium, elegant, minimal
-- Max 2–3 sentences
-- No long paragraphs
-
-FLOW:
-- ALWAYS ask 1 relevant question first
-- NEVER jump straight into suggestions
-- Guide step-by-step
-
-YOU MUST COLLECT:
-1. Space type (living room, bedroom, etc.)
-2. Style preference
-3. Budget (optional)
-4. Name
-5. Email
-
-WHEN READY:
-→ Give tailored suggestions
-→ Then guide toward consultation
-
-USER CONTEXT:
-Name: ${context?.name || "unknown"}
-Email: ${context?.email || "unknown"}
-
-RULES:
-- If missing info → ask
-- If enough info → suggest
-- If name/email missing → ask naturally
-              `,
-            },
-            {
-              role: "user",
-              content: message,
-            },
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "system", content: contextBlock },
+            ...messages,
           ],
         }),
       }
@@ -72,25 +102,33 @@ RULES:
 
     if (!response.ok) {
       console.error("OPENROUTER ERROR:", data);
-
       return NextResponse.json(
         { reply: data?.error?.message || "AI unavailable right now." },
         { status: 500 }
       );
     }
 
-    let reply =
-      data?.choices?.[0]?.message?.content || "No response";
+    let reply = data?.choices?.[0]?.message?.content || "No response";
 
-    // 🔥 HARD LIMIT (UX polish)
-    if (reply.length > 300) {
-      reply = reply.slice(0, 300) + "...";
+    // 🔥 LIGHT SANITIZATION (not heavy filtering)
+    reply = reply
+      .replace(/start your project/gi, "")
+      .replace(/get started/gi, "")
+      .replace(/book now/gi, "");
+
+    // Trim safely
+    if (reply.length > 240) {
+      const cut = reply.slice(0, 240);
+      const lastSentence = cut.lastIndexOf(".");
+      reply =
+        lastSentence > 120
+          ? cut.slice(0, lastSentence + 1)
+          : cut + "...";
     }
 
     return NextResponse.json({ reply });
   } catch (error) {
     console.error("SERVER ERROR:", error);
-
     return NextResponse.json(
       { reply: "Something went wrong. Try again." },
       { status: 500 }
