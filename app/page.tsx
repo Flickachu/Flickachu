@@ -221,7 +221,7 @@ return (
 </section>
 
     {/* EDITORIAL */}
-    <section className="py-20 md:py-40 text-center max-w-3xl mx-auto px-6 md:px-10">
+    <section className="py-12 md:py-40 text-center max-w-3xl mx-auto px-6 md:px-10">
       <FadeUp>
         <p className="text-3xl leading-relaxed">
           We believe design is not just visual — it is{" "}
@@ -237,7 +237,7 @@ return (
     </section>
 
     {/* ABOUT */}
-    <section id="about" className="py-20 md:py-40 max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-28 items-center">
+    <section id="about" className="py-12 md:py-40 max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-28 items-center">
       <Image
   src="/images/about.jpg"
   alt="About"
@@ -304,7 +304,7 @@ return (
     </section>
 
     {/* ✅ NEW SECTION (Services — inserted, nothing broken) */}
-<section id="services" className="py-20 md:py-40 px-6 md:px-10 max-w-[1400px] mx-auto">      <h2 className="text-5xl mb-16">
+<section id="services" className="py-12 md:py-40 px-6 md:px-10 max-w-[1400px] mx-auto">      <h2 className="text-5xl mb-16">
         Our <span className="italic serif">Services</span>
       </h2>
 
@@ -333,7 +333,7 @@ return (
     </section>
 
     {/* FEATURED */}
-    <section className="py-20 md:py-40 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 px-6 md:px-10">
+    <section className="py-12 md:py-40 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 px-6 md:px-10">
       <Image
   src="/images/featured.jpg"
   alt="Featured project"
@@ -367,7 +367,7 @@ return (
     </section>
 
     {/* PROJECT GRID */}
-<section id="projects" className="py-20 md:py-40 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 px-6 md:px-10">
+<section id="projects" className="py-12 md:py-40 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 px-6 md:px-10">
         {[
         ["project1.jpg", "Private Residence — Mumbai"],
         ["project2.jpg", "Luxury Villa — Dubai"],
@@ -534,7 +534,7 @@ return (
 </section>
 
 {/* MATERIAL SECTION — MOBILE VERSION (VERTICAL STACK) */}
-<section id="materials-mobile" className="md:hidden py-20 px-6">
+<section id="materials-mobile" className="md:hidden py-12 px-6">
   <div className="text-center mb-16">
     <h2 className="text-5xl mb-6">
       Material <span className="italic serif">Palette</span>
@@ -545,7 +545,7 @@ return (
   </div>
 
   {/* WOOD */}
-  <div className="mb-20">
+  <div className="mb-10 md:mb-20">
     <h3 className="text-3xl mb-8 text-center">
       Natural <span className="italic serif">Wood</span>
     </h3>
@@ -581,7 +581,7 @@ return (
   </div>
 
   {/* LEATHER */}
-  <div className="mb-20">
+  <div className="mb-10 md:mb-20">
     <h3 className="text-3xl mb-8 text-center">
       Refined <span className="italic serif">Leather</span>
     </h3>
@@ -617,7 +617,7 @@ return (
   </div>
 
   {/* STONE */}
-  <div className="mb-20">
+  <div className="mb-10 md:mb-20">
     <h3 className="text-3xl mb-8 text-center">
       Stone & <span className="italic serif">Marble</span>
     </h3>
@@ -671,8 +671,8 @@ return (
 </section>
 
     {/* BLOG */}
-    <section id="insights" className="py-20 md:py-40 px-6 md:px-10">
-      <h2 className="text-5xl mb-20">
+    <section id="insights" className="py-12 md:py-40 px-6 md:px-10">
+      <h2 className="text-5xl mb-10 md:mb-20">
         Latest <span className="italic serif">Insights</span>
       </h2>
 
@@ -693,8 +693,8 @@ return (
     </section>
 
     {/* TESTIMONIALS */}
-    <section className="py-20 md:py-40 text-center px-6 md:px-10">
-      <h2 className="text-5xl mb-20">
+    <section className="py-12 md:py-40 text-center px-6 md:px-10">
+      <h2 className="text-5xl mb-10 md:mb-20">
         Client <span className="italic serif">Experiences</span>
       </h2>
 
@@ -714,7 +714,7 @@ return (
     </section>
 
     {/* CTA */}
-<section id="contact" className="py-20 md:py-40 bg-black text-white text-center px-6 md:px-10">      <h2 className="text-5xl mb-6">
+<section id="contact" className="py-12 md:py-40 bg-black text-white text-center px-6 md:px-10">      <h2 className="text-5xl mb-6">
         Let's Create Something <span className="italic serif">Exceptional</span>
       </h2>
 

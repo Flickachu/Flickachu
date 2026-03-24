@@ -62,3 +62,19 @@ html, body {
   background: #000;
   color: #fff;
 }
+/* NAV STATES */
+
+header.nav-hidden {
+  transform: translateY(-100%);
+}
+
+header.nav-scrolled {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Desktop glass only */
+@media (min-width: 768px) {
+  header.nav-scrolled {
+    backdrop-filter: blur(12px);
+  }
+}
