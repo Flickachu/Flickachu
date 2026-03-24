@@ -6,19 +6,26 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function initSmoothScroll() {
+export function initSmoothScroll(): () => void {
   const lenis = new Lenis({
     duration: 1.2,
     smoothWheel: true,
   });
 
+  // Sync ScrollTrigger
   lenis.on("scroll", ScrollTrigger.update);
 
-  gsap.ticker.add((time) => {
+  // Store ticker function reference (IMPORTANT)
+  const raf = (time: number) => {
     lenis.raf(time * 1000);
-  });
+  };
 
+  gsap.ticker.add(raf);
   gsap.ticker.lagSmoothing(0);
 
-  return lenis;
+  // ✅ RETURN CLEANUP FUNCTION
+  return () => {
+    gsap.ticker.remove(raf);     // 🔥 CRITICAL FIX
+    lenis.destroy();             // 🔥 CRITICAL FIX
+  };
 }
