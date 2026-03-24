@@ -5,9 +5,10 @@ import {
   Great_Vibes,
 } from "next/font/google";
 
+import ChatWidget from "./components/ChatWidget"; // ✅ import the chat widget component
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import Footer from "./components/Footer";
-import BackToTop from "./components/BackToTop"; // ✅ ADD THIS
+import BackToTop from "./components/BackToTop";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -47,7 +48,8 @@ export default function RootLayout({
         <SmoothScrollProvider>
           {children}
           <Footer />
-          <BackToTop /> {/* ✅ GLOBAL BUTTON */}
+          <BackToTop />
+          <ChatWidget /> {/* ✅ CORRECT PLACEMENT */}
         </SmoothScrollProvider>
       </body>
     </html>

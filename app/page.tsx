@@ -134,41 +134,53 @@ if (section) {
 
     <Navbar />
 
-    {/* HERO */}
-    <section className="relative h-screen flex items-center overflow-hidden">
-      <Image
-  src="/images/hero.jpg"
-  alt="Hero"
-  fill
-  priority
-  className="hero-img object-cover"
-/>
-      <div className="absolute inset-0 bg-black/50" />
+  {/* HERO */}
+<section className="relative h-screen flex items-center overflow-hidden">
+  <Image
+    src="/images/hero.jpg"
+    alt="Hero"
+    fill
+    priority
+    className="hero-img object-cover"
+  />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-10">
-        <FadeUp>
-          <h1 className="text-7xl md:text-[90px] text-white max-w-4xl">
-            Crafted Spaces.<br />
-            <span className="italic serif">Timeless Living.</span>
-          </h1>
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-black/50" />
 
-          {/* ✅ ADDED */}
-          <p className="text-white/80 mt-6 max-w-xl">
-            Thoughtfully designed interiors and bespoke furniture pieces that elevate
-            everyday living into an experience of quiet luxury.
-          </p>
+  <div className="relative z-10 max-w-[1400px] mx-auto px-10 w-full">
+    <FadeUp>
+      <div className="max-w-2xl md:ml-20 text-left">
 
-          {/* ✅ ADDED */}
+        {/* HEADLINE */}
+        <h1 className="text-6xl md:text-[88px] leading-[1.05] text-white tracking-[-0.02em]">
+          We design spaces<br />
+          you <span className="italic serif">remember</span>
+        </h1>
 
+        {/* SUBTEXT */}
+        <p className="text-white/70 mt-6 max-w-md leading-relaxed text-lg">
+          Thoughtfully designed interiors and bespoke furniture pieces that turn
+          everyday living into a refined, sensory experience.
+        </p>
 
-<Link href="/consultation">
-  <button className="mt-8 px-8 py-4 border border-white rounded-full text-white hover:bg-white hover:text-black transition">
-    Get Consultation
-  </button>
-</Link>
-        </FadeUp>
+        {/* CTA */}
+        <Link href="/consultation">
+          <button className="relative mt-10 px-8 py-4 border border-white/30 rounded-full text-white overflow-hidden group transition-all duration-300">
+            
+            <span className="relative z-10 tracking-wide">
+              Start Your Project
+            </span>
+
+            {/* subtle hover layer */}
+            <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+
+          </button>
+        </Link>
+
       </div>
-    </section>
+    </FadeUp>
+  </div>
+</section>
 
     {/* EDITORIAL */}
     <section className="py-40 text-center max-w-3xl mx-auto px-6">
