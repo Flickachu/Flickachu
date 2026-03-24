@@ -9,13 +9,13 @@ export default function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    const isMobile = window.innerWidth <= 768;
+    // Use matchMedia instead of raw width (more reliable)
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // 🚫 Disable on mobile
     if (isMobile || prefersReducedMotion) return;
 
     const cleanup = initSmoothScroll();

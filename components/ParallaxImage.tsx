@@ -7,18 +7,27 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ParallaxImage() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    // 🚫 Disable on mobile
+    if (isMobile) return;
+
     const ctx = gsap.context(() => {
-      gsap.to(".parallax-img", {
-        y: -100, // movement amount
+      const img = ref.current?.querySelector(".parallax-img");
+
+      if (!img) return;
+
+      gsap.to(img, {
+        y: -80, // slightly reduced for smoother feel
         ease: "none",
         scrollTrigger: {
           trigger: ref.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: true,
+          scrub: 0.5, // 🔥 smoother + less heavy than true
         },
       });
     }, ref);
@@ -27,7 +36,10 @@ export default function ParallaxImage() {
   }, []);
 
   return (
-    <section ref={ref} className="h-[120vh] flex items-center justify-center overflow-hidden">
+    <section
+      ref={ref}
+      className="h-[120vh] flex items-center justify-center overflow-hidden"
+    >
       <div className="overflow-hidden">
         <img
           src="/images/hero.jpg"

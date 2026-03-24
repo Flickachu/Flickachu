@@ -51,95 +51,93 @@ useEffect(() => {
 
   return () => window.removeEventListener("resize", check);
 }, []);
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+ useEffect(() => {
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
-      // FETCH POSTS
-      getPosts().then(setPosts);
+  const ctx = gsap.context(() => {
 
-      // HERO PARALLAX
-      gsap.to(".hero-img", {
-        scale: 1.15,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero-img",
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
+    // FETCH POSTS
+    getPosts().then(setPosts);
 
-      // IMAGE ZOOM
-      gsap.utils.toArray(".project-img").forEach((img: any) => {
-        gsap.fromTo(
-          img,
-          { scale: 1.2 },
-          {
-            scale: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: img,
-              start: "top 85%",
-              end: "bottom 60%",
-              scrub: true,
-            },
-          }
-        );
-      });
+    // 🚫 STOP ALL HEAVY ANIMATIONS ON MOBILE
+    if (isMobile) return;
 
-      const section = containerRef.current;
-
-      if (section && window.innerWidth >= 768) {
-        const getWidth = () => section.scrollWidth - window.innerWidth;
-
-        gsap.to(section, {
-          x: () => -getWidth(),
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: () => `+=${getWidth()}`,
-            scrub: true,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-      }
-
-      // MATERIAL IMAGES
-      gsap.utils.toArray(".material-img").forEach((img: any) => {
-        gsap.fromTo(
-          img,
-          { scale: 1.1 },
-          {
-            scale: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: img,
-              start: "top 90%",
-              end: "bottom 60%",
-              scrub: true,
-            },
-          }
-        );
-      });
-
+    // ✅ HERO PARALLAX (DESKTOP ONLY)
+    gsap.to(".hero-img", {
+      scale: 1.1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero-img",
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.5,
+      },
     });
 
-    const handleResize = () => {
-      ScrollTrigger.refresh();
-    };
+    // ✅ IMAGE ZOOM (OPTIMIZED)
+    gsap.utils.toArray(".project-img").forEach((img: any) => {
+      gsap.fromTo(
+        img,
+        { scale: 1.1 },
+        {
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: img,
+            start: "top 85%",
+            end: "bottom 60%",
+            scrub: 0.5,
+          },
+        }
+      );
+    });
 
-    window.addEventListener("resize", handleResize);
-    ScrollTrigger.refresh();
+    // ✅ HORIZONTAL SCROLL (DESKTOP ONLY)
+    const section = containerRef.current;
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      ctx.revert();
-    };
+    if (section) {
+      const getWidth = () => section.scrollWidth - window.innerWidth;
 
-  }, []);
+      gsap.to(section, {
+        x: () => -getWidth(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${getWidth()}`,
+          scrub: 0.5,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+    }
+
+    // ✅ MATERIAL IMAGES
+    gsap.utils.toArray(".material-img").forEach((img: any) => {
+      gsap.fromTo(
+        img,
+        { scale: 1.05 },
+        {
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: img,
+            start: "top 90%",
+            end: "bottom 60%",
+            scrub: 0.5,
+          },
+        }
+      );
+    });
+
+  });
+
+  return () => {
+    ctx.revert();
+  };
+
+}, []);
 
 return (
   <>
