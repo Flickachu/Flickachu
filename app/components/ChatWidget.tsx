@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { MessageSquare, X } from "lucide-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -100,7 +101,6 @@ export default function ChatWidget() {
       });
 
       const data = await res.json();
-
       return data.reply || "Alright. Let’s continue.";
     } catch {
       return "Alright. Let’s continue.";
@@ -189,40 +189,45 @@ export default function ChatWidget() {
 
   return (
     <>
-      {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed right-[-45px] top-[75%] -translate-y-1/2 z-50 bg-black text-white px-4 py-2 rounded-tl-xl rounded-tr-xl shadow-lg rotate-[-90deg]"
-        >
-          Chat with us
-        </button>
-      )}
+
+      {/* FLOATING BUTTON */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full backdrop-blur-md bg-white/50 border border-black/10 flex items-center justify-center hover:bg-white/70 transition"
+      >
+        {open ? <X size={18} /> : <MessageSquare size={18} />}
+      </button>
 
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-[360px] h-[520px] rounded-2xl overflow-hidden border border-black/10 bg-white/70 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] flex flex-col">
+        <div className="fixed bottom-6 left-6 z-50 w-[360px] h-[520px] rounded-2xl overflow-hidden border border-black/10 bg-white/50 backdrop-blur-xl flex flex-col">
 
           <div className="flex justify-between items-center px-5 py-4 border-b border-black/10">
             <p className="text-sm font-semibold">Laminate Gallery Assistant</p>
-            <button onClick={() => setOpen(false)}>✕</button>
+            <button onClick={() => setOpen(false)}>
+              <X size={16} />
+            </button>
           </div>
 
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-sm">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`px-4 py-2 rounded-2xl max-w-[75%] ${m.role === "user" ? "bg-black text-white" : "bg-black/5"}`}>
+                <div className={`px-4 py-2 rounded-2xl max-w-[75%] ${
+                  m.role === "user"
+                    ? "bg-black text-white"
+                    : "bg-black/5"
+                }`}>
                   {m.content}
                 </div>
               </div>
             ))}
 
-            {/* OPTIONS */}
             {step in options && (
               <div className="flex flex-wrap gap-2">
                 {options[step as keyof typeof options].map((opt) => (
                   <button
                     key={opt}
                     onClick={() => handleOptionClick(opt)}
-                    className="text-xs px-3 py-2 bg-black/5 rounded-full"
+                    className="text-xs px-3 py-2 bg-black/5 rounded-full hover:bg-black/10 transition"
                   >
                     {opt}
                   </button>
@@ -235,11 +240,10 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* CONTACT INPUT ONLY */}
           {step === "contact" && (
             <div className="p-4 border-t flex gap-2">
               <input
-                className="flex-1 border px-3 py-2 rounded-lg text-sm"
+                className="flex-1 px-3 py-2 rounded-full text-sm bg-white/40 border border-black/10 outline-none"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleInputSubmit()}
@@ -247,7 +251,7 @@ export default function ChatWidget() {
               />
               <button
                 onClick={handleInputSubmit}
-                className="px-4 py-2 bg-black text-white rounded-lg"
+                className="px-4 py-2 bg-black text-white rounded-full text-sm"
               >
                 Send
               </button>

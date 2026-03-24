@@ -34,6 +34,7 @@ async function getPosts() {
 }
 
 export default function Home() {
+  const [isDesktop, setIsDesktop] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const pathname = usePathname(); // ✅ ADDED
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -42,7 +43,14 @@ export default function Home() {
   useEffect(() => {
     document.documentElement.classList.remove("is-transitioning");
   }, [pathname]);
+useEffect(() => {
+  const check = () => setIsDesktop(window.innerWidth >= 768);
 
+  check();
+  window.addEventListener("resize", check);
+
+  return () => window.removeEventListener("resize", check);
+}, []);
   useEffect(() => {
     const ctx = gsap.context(() => {
 
@@ -79,25 +87,26 @@ export default function Home() {
         );
       });
 
-const section = containerRef.current;
+      const section = containerRef.current;
 
-if (section) {
-  const getWidth = () => section.scrollWidth - window.innerWidth;
+      if (section && window.innerWidth >= 768) {
+        const getWidth = () => section.scrollWidth - window.innerWidth;
 
-  gsap.to(section, {
-    x: () => -getWidth(),
-    ease: "none",
-    scrollTrigger: {
-      trigger: section,
-      start: "top top",
-      end: () => `+=${getWidth()}`,
-      scrub: true,
-      pin: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-    },
-  });
-}
+        gsap.to(section, {
+          x: () => -getWidth(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => `+=${getWidth()}`,
+            scrub: true,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
       // MATERIAL IMAGES
       gsap.utils.toArray(".material-img").forEach((img: any) => {
         gsap.fromTo(
@@ -134,36 +143,40 @@ if (section) {
 
 return (
   <>
-    <SectionNav />
+    {isDesktop && <SectionNav />}
 
     <main className="bg-[#f6f3ee] text-[#1a1a1a]">
       <Navbar />
 
   {/* HERO */}
-<section id="hero" className="relative h-screen flex items-center overflow-hidden">
-  <Image
-    src="/images/hero.jpg"
-    alt="Hero"
-    fill
-    priority
-    className="hero-img object-cover"
-  />
+<section id="hero" className="relative min-h-[85vh] md:h-screen flex items-center overflow-hidden">
+<Image
+  src={
+    typeof window !== "undefined" && window.innerWidth < 768
+      ? "/images/hero-mobile.jpg"
+      : "/images/hero.jpg"
+  }
+  alt="Hero"
+  fill
+  priority
+  className="hero-img object-cover"
+/>
 
   {/* Overlay */}
   <div className="absolute inset-0 bg-black/50" />
 
-  <div className="relative z-10 max-w-[1400px] mx-auto px-10 w-full">
+  <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 w-full">
     <FadeUp>
       <div className="max-w-2xl md:ml-20 text-left">
 
         {/* HEADLINE */}
-        <h1 className="text-6xl md:text-[88px] leading-[1.05] text-white tracking-[-0.02em]">
+        <h1 className="text-[36px] md:text-[88px] leading-[1.05] text-white tracking-[-0.02em]">
           We design spaces<br />
           you <span className="italic serif">remember</span>
         </h1>
 
         {/* SUBTEXT */}
-        <p className="text-white/70 mt-6 max-w-md leading-relaxed text-lg">
+        <p className="text-white/70 mt-6 max-w-md leading-relaxed text-sm md:text-lg">
           Thoughtfully designed interiors and bespoke furniture pieces that turn
           everyday living into a refined, sensory experience.
         </p>
@@ -188,7 +201,7 @@ return (
 </section>
 
     {/* EDITORIAL */}
-    <section className="py-40 text-center max-w-3xl mx-auto px-6">
+    <section className="py-20 md:py-40 text-center max-w-3xl mx-auto px-6 md:px-10">
       <FadeUp>
         <p className="text-3xl leading-relaxed">
           We believe design is not just visual — it is{" "}
@@ -204,13 +217,13 @@ return (
     </section>
 
     {/* ABOUT */}
-    <section id="about" className="py-40 max-w-[1400px] mx-auto px-10 grid md:grid-cols-2 gap-28 items-center">
+    <section id="about" className="py-20 md:py-40 max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-28 items-center">
       <Image
   src="/images/about.jpg"
   alt="About"
   width={800}
   height={600}
-  className="rounded-2xl h-[400px] object-cover"
+  className="rounded-2xl h-[250px] md:h-[400px] object-cover"
 />
       <div>
         <h2 className="text-5xl mb-6">About <span className="italic serif">Us</span></h2>
@@ -224,14 +237,14 @@ return (
         {/* ✅ ADDED */}
         <p className="text-gray-600">
           Today, it stands as a studio dedicated to crafting interiors that balance
-          modern aesthetics with timeless sensibilities — spaces that don’t just look
+          modern aesthetics with timeless sensibilities — spaces that don't just look
           beautiful, but feel complete.
         </p>
       </div>
     </section>
 
     {/* STATS */}
-    <section className="py-32 bg-white text-center grid md:grid-cols-4 gap-12">
+    <section className="py-32 bg-white text-center grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 px-6 md:px-10">
       {[
         ["12+", "Years of Experience"],
         ["85+", "Projects Completed"],
@@ -250,7 +263,7 @@ return (
     </section>
 
     {/* IMAGE BREAK */}
-    <section className="relative h-[80vh] overflow-hidden">
+    <section className="relative h-[50vh] md:h-[80vh] overflow-hidden">
       <Image
   src="/images/project1.jpg"
   alt="Project"
@@ -259,7 +272,7 @@ return (
 />
 
       {/* ✅ UPGRADED */}
-      <div className="absolute bottom-10 left-10 text-white max-w-md">
+      <div className="absolute bottom-10 left-6 md:left-10 text-white max-w-md">
         <p className="text-xs tracking-widest mb-2 opacity-70">
           SPATIAL STUDY
         </p>
@@ -271,11 +284,11 @@ return (
     </section>
 
     {/* ✅ NEW SECTION (Services — inserted, nothing broken) */}
-<section id="services" className="py-40 px-10 max-w-[1400px] mx-auto">      <h2 className="text-5xl mb-16">
+<section id="services" className="py-20 md:py-40 px-6 md:px-10 max-w-[1400px] mx-auto">      <h2 className="text-5xl mb-16">
         Our <span className="italic serif">Services</span>
       </h2>
 
-      <div className="grid md:grid-cols-3 gap-16">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16">
         <div>
           <h3 className="text-xl mb-2">Interior Design</h3>
           <p className="text-gray-600">
@@ -300,13 +313,13 @@ return (
     </section>
 
     {/* FEATURED */}
-    <section className="py-40 grid md:grid-cols-2 gap-20 px-10">
+    <section className="py-20 md:py-40 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 px-6 md:px-10">
       <Image
   src="/images/featured.jpg"
   alt="Featured project"
   width={800}
   height={600}
-  className="project-img rounded-2xl h-[500px] object-cover"
+  className="project-img rounded-2xl h-[280px] md:h-[500px] object-cover"
 />
 
       <div>
@@ -334,7 +347,7 @@ return (
     </section>
 
     {/* PROJECT GRID */}
-<section id="projects" className="py-40 grid md:grid-cols-3 gap-12 px-10">
+<section id="projects" className="py-20 md:py-40 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 px-6 md:px-10">
         {[
         ["project1.jpg", "Private Residence — Mumbai"],
         ["project2.jpg", "Luxury Villa — Dubai"],
@@ -347,7 +360,7 @@ return (
   alt={title}
   width={800}
   height={600}
-  className="project-img h-[420px] object-cover"
+  className="project-img h-[260px] md:h-[420px] object-cover"
 />
           </div>
           <p className="mt-4 text-sm text-gray-600">{title}</p>
@@ -355,7 +368,8 @@ return (
       ))}
     </section>
 
-<section id="materials" className="relative overflow-hidden">
+{/* MATERIAL SECTION — DESKTOP VERSION */}
+<section id="materials" className="hidden md:block relative overflow-hidden">
     <div
   ref={containerRef}
   className="horizontal-wrapper flex w-[400vw] h-screen will-change-transform"
@@ -499,13 +513,133 @@ return (
   </div>
 </section>
 
+{/* MATERIAL SECTION — MOBILE VERSION (VERTICAL STACK) */}
+<section id="materials-mobile" className="md:hidden py-20 px-6">
+  <div className="text-center mb-16">
+    <h2 className="text-5xl mb-6">
+      Material <span className="italic serif">Palette</span>
+    </h2>
+    <p className="text-gray-500 max-w-md mx-auto">
+      A curated exploration of textures, finishes, and tones that define our spaces.
+    </p>
+  </div>
+
+  {/* WOOD */}
+  <div className="mb-20">
+    <h3 className="text-3xl mb-8 text-center">
+      Natural <span className="italic serif">Wood</span>
+    </h3>
+    <div className="grid grid-cols-1 gap-6">
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/wood1.jpg"
+          alt="Wood texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/wood2.jpg"
+          alt="Wood texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/wood3.jpg"
+          alt="Wood texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* LEATHER */}
+  <div className="mb-20">
+    <h3 className="text-3xl mb-8 text-center">
+      Refined <span className="italic serif">Leather</span>
+    </h3>
+    <div className="grid grid-cols-1 gap-6">
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/leather1.jpg"
+          alt="Leather texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/leather2.jpg"
+          alt="Leather texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/leather3.jpg"
+          alt="Leather texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* STONE */}
+  <div className="mb-20">
+    <h3 className="text-3xl mb-8 text-center">
+      Stone & <span className="italic serif">Marble</span>
+    </h3>
+    <div className="grid grid-cols-1 gap-6">
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/stone1.jpg"
+          alt="Stone texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/stone2.jpg"
+          alt="Stone texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src="/images/stone3.jpg"
+          alt="Stone texture"
+          width={600}
+          height={400}
+          className="material-img w-full h-[250px] object-cover"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
     {/* TRUST */}
-    <section className="py-32 text-center">
+    <section className="py-32 text-center px-6">
   <p className="text-xs tracking-[0.3em] text-gray-400 mb-16">
     SELECTED COLLABORATIONS & EXPLORATIONS
   </p>
 
-  <div className="flex justify-center items-center gap-30 flex-wrap">
+  <div className="flex justify-center items-center gap-10 md:gap-30 flex-wrap">
     {[1,2,3,4].map(i=>(
       <img
         key={i}
@@ -517,12 +651,12 @@ return (
 </section>
 
     {/* BLOG */}
-    <section id="insights" className="py-40 px-10">
+    <section id="insights" className="py-20 md:py-40 px-6 md:px-10">
       <h2 className="text-5xl mb-20">
         Latest <span className="italic serif">Insights</span>
       </h2>
 
-      <div className="grid md:grid-cols-3 gap-16">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16">
         {posts.map((post, i) => (
           <FadeUp key={i}>
             <div>
@@ -539,29 +673,29 @@ return (
     </section>
 
     {/* TESTIMONIALS */}
-    <section className="py-40 text-center">
+    <section className="py-20 md:py-40 text-center px-6 md:px-10">
       <h2 className="text-5xl mb-20">
         Client <span className="italic serif">Experiences</span>
       </h2>
 
-      <div className="grid md:grid-cols-2 gap-12 max-w-[1000px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 max-w-[1000px] mx-auto">
         <div className="bg-white p-10 rounded-2xl text-left">
-          “The team transformed our space into something beyond what we imagined.
-          Every detail feels intentional and refined.”
+          "The team transformed our space into something beyond what we imagined.
+          Every detail feels intentional and refined."
           <p className="mt-6 text-sm text-gray-500">Ananya Sharma</p>
         </div>
 
         <div className="bg-white p-10 rounded-2xl text-left">
-          “Working with Laminate Gallery was effortless. Their understanding of materials
-          and lighting is exceptional.”
+          "Working with Laminate Gallery was effortless. Their understanding of materials
+          and lighting is exceptional."
           <p className="mt-6 text-sm text-gray-500">Rahul Mehta</p>
         </div>
       </div>
     </section>
 
     {/* CTA */}
-<section id="contact" className="py-40 bg-black text-white text-center">      <h2 className="text-5xl mb-6">
-        Let’s Create Something <span className="italic serif">Exceptional</span>
+<section id="contact" className="py-20 md:py-40 bg-black text-white text-center px-6 md:px-10">      <h2 className="text-5xl mb-6">
+        Let's Create Something <span className="italic serif">Exceptional</span>
       </h2>
 
       {/* ✅ ADDED */}
