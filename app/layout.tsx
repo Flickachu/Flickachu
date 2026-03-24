@@ -4,8 +4,8 @@ import {
   Playfair_Display,
   Great_Vibes,
 } from "next/font/google";
-
-import ChatWidget from "./components/ChatWidget"; // ✅ import the chat widget component
+import Navbar from "./components/Navbar";
+import ChatWidget from "./components/ChatWidget";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
@@ -45,12 +45,17 @@ export default function RootLayout({
       className={`${jakarta.variable} ${playfair.variable} ${vibes.variable}`}
     >
       <body className="bg-[#f6f3ee] text-[#1a1a1a] antialiased font-sans">
+
+        {/* ✅ NAVBAR ADDED HERE */}
+        <Navbar />
+
         <SmoothScrollProvider>
           {children}
           <Footer />
           <BackToTop />
-          <ChatWidget /> {/* ✅ CORRECT PLACEMENT */}
+          <ChatWidget />
         </SmoothScrollProvider>
+
       </body>
     </html>
   );

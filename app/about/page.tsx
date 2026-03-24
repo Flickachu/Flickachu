@@ -37,7 +37,7 @@ export default function AboutPage() {
         <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
           <FadeUp>
             <h1 className="text-7xl md:text-[90px] max-w-4xl">
-              About <span className="italic serif">Flickachu</span>
+              About <span className="italic serif">Laminate Gallery</span>
             </h1>
 
             <p className="mt-6 text-white/70 max-w-xl">
@@ -58,7 +58,7 @@ export default function AboutPage() {
           </p>
 
           <p className="text-gray-600 mt-8">
-            Flickachu was built on the idea that interiors should reflect
+            Laminate Gallery was built on the idea that interiors should reflect
             personality, not trends. Every project is approached with a balance
             of materiality, proportion, and human experience.
           </p>

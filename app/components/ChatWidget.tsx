@@ -202,7 +202,7 @@ export default function ChatWidget() {
         <div className="fixed bottom-6 right-6 z-50 w-[360px] h-[520px] rounded-2xl overflow-hidden border border-black/10 bg-white/70 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] flex flex-col">
 
           <div className="flex justify-between items-center px-5 py-4 border-b border-black/10">
-            <p className="text-sm font-semibold">Flickachu Assistant</p>
+            <p className="text-sm font-semibold">Laminate Gallery Assistant</p>
             <button onClick={() => setOpen(false)}>✕</button>
           </div>
 

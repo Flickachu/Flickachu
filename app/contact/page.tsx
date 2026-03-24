@@ -63,7 +63,7 @@ export default function ContactPage() {
 
             <div className="space-y-4 text-sm text-gray-700">
               <p>Pune, India</p>
-              <p>hello@flickachu.com</p>
+              <p>hello@laminategallery.com</p>
               <p>+91 98765 43210</p>
             </div>
           </div>

@@ -8,6 +8,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
+import SectionNav from "./components/SectionNav";
+
+
 gsap.registerPlugin(ScrollTrigger);
 
 async function getPosts() {
@@ -129,13 +132,15 @@ if (section) {
 
   }, []);
 
- return (
-  <main className="bg-[#f6f3ee] text-[#1a1a1a]">
+return (
+  <>
+    <SectionNav />
 
-    <Navbar />
+    <main className="bg-[#f6f3ee] text-[#1a1a1a]">
+      <Navbar />
 
   {/* HERO */}
-<section className="relative h-screen flex items-center overflow-hidden">
+<section id="hero" className="relative h-screen flex items-center overflow-hidden">
   <Image
     src="/images/hero.jpg"
     alt="Hero"
@@ -212,7 +217,7 @@ if (section) {
 
         {/* ✅ REPLACED */}
         <p className="text-gray-600 mb-6">
-          Flickachu began as a passion project exploring the intersection of
+          Laminate Gallery began as a passion project exploring the intersection of
           architecture, furniture, and emotional design.
         </p>
 
@@ -266,8 +271,7 @@ if (section) {
     </section>
 
     {/* ✅ NEW SECTION (Services — inserted, nothing broken) */}
-    <section className="py-40 px-10 max-w-[1400px] mx-auto">
-      <h2 className="text-5xl mb-16">
+<section id="services" className="py-40 px-10 max-w-[1400px] mx-auto">      <h2 className="text-5xl mb-16">
         Our <span className="italic serif">Services</span>
       </h2>
 
@@ -330,8 +334,8 @@ if (section) {
     </section>
 
     {/* PROJECT GRID */}
-    <section className="py-40 grid md:grid-cols-3 gap-12 px-10">
-      {[
+<section id="projects" className="py-40 grid md:grid-cols-3 gap-12 px-10">
+        {[
         ["project1.jpg", "Private Residence — Mumbai"],
         ["project2.jpg", "Luxury Villa — Dubai"],
         ["project3.jpg", "Penthouse — Bangalore"],
@@ -351,8 +355,8 @@ if (section) {
       ))}
     </section>
 
-<section className="relative overflow-hidden">
-  <div
+<section id="materials" className="relative overflow-hidden">
+    <div
   ref={containerRef}
   className="horizontal-wrapper flex w-[400vw] h-screen will-change-transform"
 >
@@ -513,7 +517,7 @@ if (section) {
 </section>
 
     {/* BLOG */}
-    <section className="py-40 px-10">
+    <section id="insights" className="py-40 px-10">
       <h2 className="text-5xl mb-20">
         Latest <span className="italic serif">Insights</span>
       </h2>
@@ -548,7 +552,7 @@ if (section) {
         </div>
 
         <div className="bg-white p-10 rounded-2xl text-left">
-          “Working with Flickachu was effortless. Their understanding of materials
+          “Working with Laminate Gallery was effortless. Their understanding of materials
           and lighting is exceptional.”
           <p className="mt-6 text-sm text-gray-500">Rahul Mehta</p>
         </div>
@@ -556,8 +560,7 @@ if (section) {
     </section>
 
     {/* CTA */}
-    <section className="py-40 bg-black text-white text-center">
-      <h2 className="text-5xl mb-6">
+<section id="contact" className="py-40 bg-black text-white text-center">      <h2 className="text-5xl mb-6">
         Let’s Create Something <span className="italic serif">Exceptional</span>
       </h2>
 
@@ -573,5 +576,6 @@ if (section) {
     </section>
 
   </main>
+  </>
 );
 }

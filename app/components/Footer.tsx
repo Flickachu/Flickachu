@@ -14,7 +14,7 @@ export default function Footer() {
             href="/"
             className="cursive text-3xl leading-none tracking-wide mb-3 block"
           >
-            Flickachu
+            Laminate Gallery
           </NavLink>
 
           <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
@@ -87,7 +87,7 @@ export default function Footer() {
 
           <div className="text-sm text-gray-300 space-y-2">
             <p>Pune, India</p>
-            <p>hello@flickachu.com</p>
+            <p>hello@laminategallery.com</p>
             <p>+91 98765 43210</p>
           </div>
         </div>
@@ -97,9 +97,9 @@ export default function Footer() {
       {/* DIVIDER */}
       <div className="border-t border-white/10 mt-16 pt-6 flex justify-between items-center text-sm text-gray-500">
 
-        <p>© 2026 Flickachu. All rights reserved.</p>
+        <p>© 2026 Laminate Gallery. All rights reserved.</p>
 
-        <p className="hidden md:block">Designed & Developed by Flickachu</p>
+        <p className="hidden md:block">Designed & Developed by Laminate Gallery</p>
 
       </div>
 

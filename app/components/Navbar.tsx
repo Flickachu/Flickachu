@@ -28,11 +28,18 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
         triggerPoint = offsetTop + height;
       }
 
-      if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
-        setShowNav(false);
-      } else {
-        setShowNav(true);
-      }
+// 🚫 Prevent hide on initial load
+if (lastScroll === 0) {
+  setShowNav(true);
+  setLastScroll(currentScroll);
+  return;
+}
+
+if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
+  setShowNav(false);
+} else {
+  setShowNav(true);
+}
 
       setLastScroll(currentScroll);
     };
@@ -72,7 +79,7 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
             className={`cursive text-3xl md:text-4xl leading-none tracking-wide transition-all duration-300
             ${isScrolled || forceDark ? "text-black" : "text-white"}`}
           >
-            Flickachu
+            Laminate Gallery
           </NavLink>
 
           {/* DESKTOP NAV */}
