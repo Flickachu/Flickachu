@@ -197,17 +197,18 @@ export default function ChatWidget() {
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-label={open ? "Close Chat Assistant" : "Open Chat Assistant"}
-        className="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full backdrop-blur-md bg-white/50 border border-black/10 flex items-center justify-center hover:bg-white/70 transition"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 h-12 px-6 rounded-full backdrop-blur-xl bg-white/70 shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-black/10 flex items-center justify-center hover:bg-white/90 hover:scale-105 transition-all duration-300"
       >
-        {open ? <X size={18} /> : <MessageSquare size={18} />}
+        {open ? <X size={16} className="mr-2 text-black" /> : <MessageSquare size={16} className="mr-2 text-[#a27725]" />}
+        <span className="text-sm font-medium tracking-wide uppercase text-black">{open ? "Close" : "Ask Assistant"}</span>
       </button>
 
       {open && (
-        <div className="fixed bottom-6 left-6 z-[49] w-[360px] h-[520px] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/80 backdrop-blur-xl flex flex-col mt-4">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[49] w-[360px] h-[520px] max-h-[80vh] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/80 backdrop-blur-xl flex flex-col origin-bottom animate-in slide-in-from-bottom-4 fade-in duration-300">
 
           <div className="flex justify-between items-center px-5 py-4 border-b border-black/10 bg-white/50">
             <p className="text-sm font-semibold tracking-wide">Assistant</p>
-            <button onClick={() => setOpen(false)} aria-label="Close chat">
+            <button onClick={() => setOpen(false)} aria-label="Close chat" className="hover:rotate-90 transition-transform">
               <X size={16} />
             </button>
           </div>
@@ -217,7 +218,7 @@ export default function ChatWidget() {
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`px-4 py-3 rounded-2xl max-w-[85%] leading-relaxed shadow-sm ${
                   m.role === "user"
-                    ? "bg-black text-white rounded-br-none"
+                    ? "bg-[#1a1a1a] text-white rounded-br-none"
                     : "bg-white border border-black/5 rounded-bl-none text-black/80"
                 }`}>
                   {m.content}
@@ -232,7 +233,7 @@ export default function ChatWidget() {
                     key={opt}
                     aria-label={`Select ${opt}`}
                     onClick={() => handleOptionClick(opt)}
-                    className="text-xs px-4 py-2.5 bg-black/5 rounded-full hover:bg-black hover:text-white transition w-max shadow-sm"
+                    className="text-xs px-4 py-2.5 bg-white border border-black/5 rounded-full hover:bg-[#1a1a1a] hover:text-white transition-all w-max shadow-sm"
                   >
                     {opt}
                   </button>
@@ -258,7 +259,7 @@ export default function ChatWidget() {
               <button
                 onClick={handleInputSubmit}
                 aria-label="Send contact information"
-                className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-medium hover:bg-[#a27725] transition"
+                className="px-5 py-2.5 bg-[#1a1a1a] text-white rounded-full text-sm font-medium hover:bg-[#a27725] transition-colors"
               >
                 Send
               </button>
