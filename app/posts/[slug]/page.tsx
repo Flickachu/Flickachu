@@ -11,31 +11,53 @@ export default async function PostPage(props: any) {
 }
 
 async function getPost(slug: string) {
-  const res = await fetch("http://flickachu.local/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    body: JSON.stringify({
-      query: `
-        query GetPost($uri: String!) {
-          postBy(uri: $uri) {
-            title
-            content
-          }
-        }
-      `,
-      variables: {
-        uri: "/" + slug, // correct for your setup
+  try {
+    const res = await fetch("http://flickachu.local/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    }),
-  });
+      cache: "no-store",
+      body: JSON.stringify({
+        query: `
+          query GetPost($uri: String!) {
+            postBy(uri: $uri) {
+              title
+              content
+            }
+          }
+        `,
+        variables: {
+          uri: "/" + slug, 
+        },
+      }),
+    });
 
-  const json = await res.json();
-  if (json.errors) return null;
+    const json = await res.json();
+    if (!json.errors && json.data?.postBy) {
+      return json.data.postBy;
+    }
+  } catch (error) {
+    // fallback logic triggers below on catch
+  }
 
-  return json.data?.postBy;
+  // Fallback Database for when WP is offline
+  const fallbacks: Record<string, {title: string; content: string}> = {
+    "sculpted-minimalism": {
+      title: "Sculpted Minimalism",
+      content: "<p>A refined living space defined by clean lines, soft lighting, and carefully selected materials. The design focuses on creating a calm, immersive environment tailored for modern living.</p><img src='/images/project1.jpg' style='width:100%; border-radius:1rem; margin-top:2rem;' />"
+    },
+    "material-harmony": {
+      title: "The Art of Material Harmony",
+      content: "<p>Exploring how textures, tones, and finishes come together to create balanced interiors resulting in striking aesthetics and absolute comfort.</p><img src='/images/wood1.jpg' style='width:100%; border-radius:1rem; margin-top:2rem;' />"
+    },
+    "timeless-design": {
+      title: "Timeless vs Trend-Driven Spaces",
+      content: "<p>Understanding the balance between contemporary trends and enduring design principles, ensuring spaces never feel dated.</p><img src='/images/leather1.jpg' style='width:100%; border-radius:1rem; margin-top:2rem;' />"
+    }
+  };
+
+  return fallbacks[slug] || null;
 }
 
 async function PostContent({ params }: { params: any }) {

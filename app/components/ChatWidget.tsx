@@ -86,24 +86,24 @@ export default function ChatWidget() {
     }
   }, [open, messages.length]);
 
-  const askAI = async (newLead: LeadData, newMessages: Message[]) => {
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: newMessages,
-          leadData: newLead,
-          hasAskedContact: step === "contact",
-        }),
-      });
-
-      const data = await res.json();
-      return data.reply || "Alright. Let’s continue.";
-    } catch {
-      return "Alright. Let’s continue.";
+  const getBotReply = (nextStep: Step, value: string) => {
+    switch (nextStep) {
+      case "style":
+        return `A ${value.toLowerCase()} sounds wonderful. What style are you drawn to?`;
+      case "requirement":
+        return `Got it. So what's the primary function for this area?`;
+      case "budget":
+        return `Understood. Have you considered an estimated budget for this project?`;
+      case "timeline":
+        return `That helps us plan perfectly. When are you looking to have this completed?`;
+      case "size":
+        return `Great. And roughly, what's the size of the space?`;
+      case "contact":
+        return `Perfect, that gives our design team a clear picture. What’s the best email or phone number to reach you at?`;
+      case "done":
+        return `Thank you! Our lead designer will reach out shortly.`;
+      default:
+        return `Alright. Let's continue.`;
     }
   };
 
@@ -132,7 +132,10 @@ export default function ChatWidget() {
       return;
     }
 
-    const aiReply = await askAI(newLead, newMessages);
+    // Simulate natural typing delay
+    await new Promise((r) => setTimeout(r, 600));
+
+    const aiReply = getBotReply(next, value);
 
     setMessages((prev) => [
       ...prev,
@@ -179,7 +182,7 @@ export default function ChatWidget() {
       {
         role: "assistant",
         content:
-          "That gives me a clear direction. Our team will reach out shortly.",
+          "That gives me a clear direction. Our team will reach out shortly to discuss your vision.",
       },
     ]);
 
@@ -189,32 +192,33 @@ export default function ChatWidget() {
 
   return (
     <>
-
       {/* FLOATING BUTTON */}
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-label={open ? "Close Chat Assistant" : "Open Chat Assistant"}
         className="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full backdrop-blur-md bg-white/50 border border-black/10 flex items-center justify-center hover:bg-white/70 transition"
       >
         {open ? <X size={18} /> : <MessageSquare size={18} />}
       </button>
 
       {open && (
-        <div className="fixed bottom-6 left-6 z-50 w-[360px] h-[520px] rounded-2xl overflow-hidden border border-black/10 bg-white/50 backdrop-blur-xl flex flex-col">
+        <div className="fixed bottom-6 left-6 z-[49] w-[360px] h-[520px] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/80 backdrop-blur-xl flex flex-col mt-4">
 
-          <div className="flex justify-between items-center px-5 py-4 border-b border-black/10">
-            <p className="text-sm font-semibold">Laminate Gallery Assistant</p>
-            <button onClick={() => setOpen(false)}>
+          <div className="flex justify-between items-center px-5 py-4 border-b border-black/10 bg-white/50">
+            <p className="text-sm font-semibold tracking-wide">Assistant</p>
+            <button onClick={() => setOpen(false)} aria-label="Close chat">
               <X size={16} />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-sm">
+          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 text-sm">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`px-4 py-2 rounded-2xl max-w-[75%] ${
+                <div className={`px-4 py-3 rounded-2xl max-w-[85%] leading-relaxed shadow-sm ${
                   m.role === "user"
-                    ? "bg-black text-white"
-                    : "bg-black/5"
+                    ? "bg-black text-white rounded-br-none"
+                    : "bg-white border border-black/5 rounded-bl-none text-black/80"
                 }`}>
                   {m.content}
                 </div>
@@ -222,12 +226,13 @@ export default function ChatWidget() {
             ))}
 
             {step in options && (
-              <div className="flex flex-wrap gap-2">
+               <div className="flex flex-col items-end gap-2 mt-2 pt-2">
                 {options[step as keyof typeof options].map((opt) => (
                   <button
                     key={opt}
+                    aria-label={`Select ${opt}`}
                     onClick={() => handleOptionClick(opt)}
-                    className="text-xs px-3 py-2 bg-black/5 rounded-full hover:bg-black/10 transition"
+                    className="text-xs px-4 py-2.5 bg-black/5 rounded-full hover:bg-black hover:text-white transition w-max shadow-sm"
                   >
                     {opt}
                   </button>
@@ -235,23 +240,25 @@ export default function ChatWidget() {
               </div>
             )}
 
-            {loading && <p className="text-xs text-black/40">Typing...</p>}
+            {loading && <p className="text-xs text-black/40 italic ml-2">Typing...</p>}
 
             <div ref={messagesEndRef} />
           </div>
 
           {step === "contact" && (
-            <div className="p-4 border-t flex gap-2">
+            <div className="p-4 border-t bg-white/50 border-black/10 flex gap-2">
               <input
-                className="flex-1 px-3 py-2 rounded-full text-sm bg-white/40 border border-black/10 outline-none"
+                className="flex-1 px-4 py-2.5 rounded-full text-sm bg-white border border-black/10 outline-none focus:border-black transition shadow-sm"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleInputSubmit()}
                 placeholder="Phone or email"
+                aria-label="Enter contact phone or email"
               />
               <button
                 onClick={handleInputSubmit}
-                className="px-4 py-2 bg-black text-white rounded-full text-sm"
+                aria-label="Send contact information"
+                className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-medium hover:bg-[#a27725] transition"
               >
                 Send
               </button>

@@ -34,20 +34,20 @@ export default function PropertyPage() {
       setIsAnimating(false);
     }, 700);
   };
-const imageCache = useRef<Record<string, HTMLImageElement>>({});
+  const imageCache = useRef<Record<string, HTMLImageElement>>({});
 
-useEffect(() => {
-  Object.entries(images).forEach(([key, src]) => {
-    if (!imageCache.current[key]) {
-      const img = new Image();
-      img.src = src;
-      imageCache.current[key] = img;
-    }
-  });
-}, []);
+  useEffect(() => {
+    Object.entries(images).forEach(([key, src]) => {
+      if (!imageCache.current[key]) {
+        const img = new Image();
+        img.src = src;
+        imageCache.current[key] = img;
+      }
+    });
+  }, []);
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-black">
-      
+
       <Navbar forceDark />
 
       {/* HERO */}
@@ -72,89 +72,89 @@ useEffect(() => {
 
       {/* CONFIGURATOR */}
       <section className="px-6 md:px-12 max-w-[1400px] mx-auto py-32">
-        <div className="grid md:grid-cols-[1fr_1.4fr] gap-16 items-center">
+        <div className="flex flex-col md:grid md:grid-cols-[1fr_1.4fr] gap-10 md:gap-16 items-start">
 
-          {/* LEFT */}
-          <div className="space-y-10">
-            
-            <div>
-              <FadeUp>
-                <h2 className="text-3xl md:text-5xl font-light tracking-tight">
-                  Living Room Configurator
-                </h2>
-              </FadeUp>
+          {/* HEADINGS - order 1 on mobile */}
+          <div className="order-1 md:col-start-1 md:row-start-1 w-full pt-4">
+            <FadeUp>
+              <h2 className="text-3xl md:text-5xl font-light tracking-tight">
+                Living Room Configurator
+              </h2>
+            </FadeUp>
+            <FadeUp delay={0.2}>
+              <p className="text-neutral-500 mt-3 md:hidden">
+                Change the palette and experience the transformation in real time.
+              </p>
+            </FadeUp>
+          </div>
 
-              <FadeUp delay={0.2}>
-                <p className="text-neutral-500 mt-3">
-                  Change the palette and experience the transformation in real time.
-                </p>
-              </FadeUp>
-            </div>
-
-            {/* COLORS */}
+          {/* RIGHT IMAGE - order 2 on mobile */}
+          <div className="order-2 w-full md:col-start-2 md:row-start-1 md:row-span-3">
             <FadeUp delay={0.3}>
-              <div>
-                <p className="text-xs tracking-[0.2em] mb-5 text-neutral-400">
-                  COLOR PALETTE
-                </p>
-
-                <div className="flex gap-5">
-                  {Object.keys(images).map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => handleColorChange(c as typeof color)}
-                      className={`w-10 h-10 rounded-full border border-black/10 shadow-sm transition-all duration-300
-                      ${
-                        activeColor === c
-                          ? "scale-110 ring-2 ring-neutral-400 ring-offset-2 ring-offset-[#f8f8f8]"
-                          : "hover:scale-110"
-                      }`}
-                      style={{
-                        backgroundColor:
-                          c === "cream" ? "#f5f5dc" : c,
-                      }}
-                    />
-                  ))}
-                </div>
+              <div className="relative h-[340px] md:h-[640px] rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
+                <img
+                  src={images[color]}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  alt="Room visualization"
+                />
+                {nextColor && (
+                  <img
+                    src={images[nextColor]}
+                    className="absolute inset-0 w-full h-full object-cover animate-reveal"
+                    alt="Room transition"
+                  />
+                )}
               </div>
             </FadeUp>
+          </div>
 
+          {/* COLORS - order 3 on mobile */}
+          <div className="order-3 w-full self-start md:col-start-1 md:row-start-2 mt-4">
+            <FadeUp delay={0.3}>
+              <p className="text-xs tracking-[0.2em] mb-5 text-neutral-400">
+                COLOR PALETTE
+              </p>
+              <div className="flex gap-5 flex-wrap">
+                {Object.keys(images).map((c) => (
+                  <button
+                    key={c}
+                    aria-label={`Select ${c} color palette`}
+                    className={`w-12 h-12 md:w-10 md:h-10 rounded-full border border-black/10 shadow-sm transition-all duration-300
+                    ${activeColor === c
+                        ? "scale-110 ring-2 ring-neutral-400 ring-offset-2 ring-offset-[#f8f8f8]"
+                        : "hover:scale-110"
+                      }`}
+                    onClick={() => handleColorChange(c as typeof color)}
+                    style={{ backgroundColor: c === "cream" ? "#f5f5dc" : c }}
+                  />
+                ))}
+              </div>
+            </FadeUp>
+          </div>
+
+          {/* TEXT - order 4 on mobile */}
+          <div className="order-4 w-full self-end md:col-start-1 md:row-start-3 hidden md:block">
             <FadeUp delay={0.4}>
-              <p className="max-w-md text-neutral-500 leading-relaxed">
+              <p className="max-w-md text-neutral-500 leading-relaxed text-lg">
                 Each palette reshapes the mood of your living space.
                 From bold statements to subtle elegance, explore possibilities effortlessly.
               </p>
             </FadeUp>
-
           </div>
 
-          {/* RIGHT IMAGE */}
-          <FadeUp delay={0.3}>
-            <div className="relative h-[540px] md:h-[640px] rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
-
-              {/* BASE IMAGE */}
-              <img
-                src={images[color]}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-
-              {/* REVEAL IMAGE */}
-              {nextColor && (
-                <img
-                  src={images[nextColor]}
-                  className="absolute inset-0 w-full h-full object-cover animate-reveal"
-                />
-              )}
-
-            </div>
-          </FadeUp>
+          <div className="order-5 w-full md:hidden mt-2">
+            <FadeUp delay={0.4}>
+              <p className="text-neutral-500 leading-relaxed">
+                Each palette reshapes the mood of your living space. Explore possibilities effortlessly.
+              </p>
+            </FadeUp>
+          </div>
 
         </div>
       </section>
 
       {/* PROPERTIES */}
       <section className="px-6 md:px-12 max-w-[1400px] mx-auto pb-40">
-        
         <FadeUp>
           <div className="mb-14">
             <h2 className="text-3xl md:text-4xl font-light tracking-tight">
@@ -164,51 +164,29 @@ useEffect(() => {
         </FadeUp>
 
         <div className="grid md:grid-cols-3 gap-10">
-
           {[
-            {
-              img: "/images/property-1.jpg",
-              title: "Modern Apartment",
-              location: "Mumbai",
-            },
-            {
-              img: "/images/property-2.jpg",
-              title: "Luxury Villa",
-              location: "Goa",
-            },
-            {
-              img: "/images/property-3.jpg",
-              title: "Minimal Studio",
-              location: "Bangalore",
-            },
+            { img: "/images/property-1.jpg", title: "Modern Apartment", location: "Mumbai", slug: "modern-apartment" },
+            { img: "/images/property-2.jpg", title: "Luxury Villa", location: "Goa", slug: "luxury-villa" },
+            { img: "/images/property-3.jpg", title: "Minimal Studio", location: "Bangalore", slug: "minimal-studio" },
           ].map((p, i) => (
             <FadeUp key={i} delay={i * 0.15}>
-              <div className="group cursor-pointer">
-                
+              <a href={`/projects/${p.slug}`} className="group cursor-pointer block">
                 <div className="relative overflow-hidden rounded-xl">
-                  
                   <img
                     src={p.img}
                     className="w-full h-[280px] object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition duration-500" />
-
                   <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition duration-500">
                     <span className="text-sm tracking-wide">View Project →</span>
                   </div>
-
                 </div>
-
                 <h3 className="mt-4 text-lg">{p.title}</h3>
                 <p className="text-sm text-neutral-500">{p.location}</p>
-
-              </div>
+              </a>
             </FadeUp>
           ))}
-
         </div>
-
       </section>
 
     </main>

@@ -20,7 +20,7 @@ export default function ProjectsPage() {
 
       {/* HERO */}
       <section className="relative h-screen flex items-center overflow-hidden bg-[#0f0f0f]">
-        
+
         <Image
           src="/images/project1.jpg"
           alt="Project hero"
@@ -75,7 +75,7 @@ export default function ProjectsPage() {
           <FadeUp key={i} delay={i * 0.1}>
             <div className="group">
               <div className="overflow-hidden rounded-2xl">
-                
+
                 <Image
                   src={`/images/${img}`}
                   alt={title}
@@ -126,9 +126,9 @@ export default function ProjectsPage() {
               every element contributes to a cohesive experience.
             </p>
 
-            <button className="mt-6 px-6 py-3 border rounded-full">
+            <a href="/projects/sculpted-minimalism" className="mt-6 px-6 py-3 border border-black rounded-full inline-block hover:bg-black hover:text-white transition group-hover:bg-black">
               View Case Study
-            </button>
+            </a>
           </div>
         </FadeUp>
 
@@ -146,9 +146,9 @@ export default function ProjectsPage() {
             precision and creativity to every detail.
           </p>
 
-          <button className="px-8 py-4 bg-white text-black rounded-full">
+          <a href="/get-quote" className="px-8 py-4 bg-white text-black rounded-full inline-block hover:bg-[#a27725] hover:text-white transition">
             Start Your Project
-          </button>
+          </a>
         </FadeUp>
       </section>
 

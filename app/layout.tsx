@@ -46,9 +46,6 @@ export default function RootLayout({
     >
       <body className="bg-[#f6f3ee] text-[#1a1a1a] antialiased font-sans selection:bg-[#a27725] selection:text-white">
 
-        {/* ✅ NAVBAR ADDED HERE */}
-        <Navbar />
-
         <SmoothScrollProvider>
           {children}
           <Footer />

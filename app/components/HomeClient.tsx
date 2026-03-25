@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation"; 
+import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import FadeUp from "./FadeUp";
 import gsap from "gsap";
@@ -18,6 +18,27 @@ export default function HomeClient({ posts }: { posts: any[] }) {
   const [isDesktop, setIsDesktop] = useState(false);
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const [quickEmail, setQuickEmail] = useState("");
+  const [quickStatus, setQuickStatus] = useState<"idle" | "loading" | "success">("idle");
+
+  const handleQuickLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickEmail) return;
+    setQuickStatus("loading");
+    try {
+      await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contact: quickEmail, source: "homepage_cta", page: "/" }),
+      });
+      setQuickStatus("success");
+      setQuickEmail("");
+      setTimeout(() => setQuickStatus("idle"), 5000);
+    } catch {
+      setQuickStatus("idle");
+    }
+  };
 
   useEffect(() => {
     document.documentElement.classList.remove("is-transitioning");
@@ -104,6 +125,32 @@ export default function HomeClient({ posts }: { posts: any[] }) {
           }
         );
       });
+
+      // STACKING CARDS
+      gsap.utils.toArray(".stack-card").forEach((card: any, i: number, arr: any[]) => {
+        // Pin the card
+        ScrollTrigger.create({
+          trigger: card,
+          start: `top ${10 + i * 2}%`,
+          endTrigger: "#process",
+          end: `bottom bottom`, // Scroll out when section finishes
+          pin: true,
+          pinSpacing: false,
+        });
+
+        // Scale down when the next card comes up
+        if (arr.length - 1 === i) return;
+        gsap.to(card, {
+          scale: 0.95,
+          ease: "none",
+          scrollTrigger: {
+            trigger: arr[i + 1],
+            start: "top bottom",
+            end: `top ${10 + (i + 1) * 2}%`,
+            scrub: true,
+          }
+        });
+      });
     });
 
     return () => {
@@ -155,7 +202,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                   everyday living into a refined, sensory experience.
                 </p>
                 <Link href="/consultation">
-                  <button className="relative mt-12 px-10 py-4 border border-[#c2a373] rounded-full text-[#c2a373] overflow-hidden group transition-all duration-500 hover:text-white">
+                  <button aria-label="Start Your Project" className="relative mt-12 px-10 py-4 border border-[#c2a373] rounded-full text-[#c2a373] overflow-hidden group transition-all duration-500 hover:text-white">
                     <span className="relative z-10 tracking-widest text-sm uppercase">
                       Start Your Project
                     </span>
@@ -295,9 +342,9 @@ export default function HomeClient({ posts }: { posts: any[] }) {
             <p className="text-[#1a1a1a]/70 mt-6 text-lg font-light leading-relaxed">
               The result is a space that feels grounded, intimate, and quietly luxurious.
             </p>
-            <button className="mt-12 px-8 py-3 border border-black/20 rounded-full text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-colors duration-500">
+            <Link href="/projects/modern-elegance" className="inline-block mt-12 px-8 py-3 border border-black/20 rounded-full text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-colors duration-500">
               View Project
-            </button>
+            </Link>
           </div>
         </section>
 
@@ -326,8 +373,71 @@ export default function HomeClient({ posts }: { posts: any[] }) {
           </div>
         </section>
 
+        {/* STACKING PROCESS CARDS */}
+        <section id="process" className="py-24 md:py-40 bg-white text-[#1a1a1a] px-6 md:px-10 relative">
+          <div className="max-w-[1200px] mx-auto relative process-container">
+            <div className="text-center mb-16 md:mb-24">
+              <p className="text-xs tracking-[0.3em] text-[#a27725] mb-6 uppercase">How we work</p>
+              <h2 className="text-4xl md:text-6xl font-light">
+                Our <span className="italic serif text-[#a27725]">Process</span>
+              </h2>
+              <p className="text-[#1a1a1a]/60 mt-6 max-w-xl mx-auto font-light text-lg">
+                A meticulous, step-by-step approach to transforming your vision into a refined reality.
+              </p>
+            </div>
+
+            <div className="relative">
+              {[
+                {
+                  step: "01", title: "Discovery & Vision",
+                  desc: "We begin by understanding your lifestyle, aesthetic preferences, and the inherent character of your space.",
+                  img: "project1.jpg",
+                  bg: "bg-[#fcfbf9]"
+                },
+                {
+                  step: "02", title: "Concept & Curation",
+                  desc: "Our team develops a comprehensive design narrative, curating material palettes, furniture plans, and lighting concepts.",
+                  img: "wood2.jpg",
+                  bg: "bg-[#f6f3ee]"
+                },
+                {
+                  step: "03", title: "Refinement & Details",
+                  desc: "Every element is meticulously reviewed and refined, ensuring harmony between architecture, interiors, and custom pieces.",
+                  img: "featured.jpg",
+                  bg: "bg-white"
+                },
+                {
+                  step: "04", title: "Realization",
+                  desc: "We oversee the precise execution of the design, from construction to the final styling of objects and art.",
+                  img: "project3.jpg",
+                  bg: "bg-[#fcfbf9]"
+                }
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className={`stack-card min-h-[50vh] md:min-h-[60vh] mb-12 md:mb-24 rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-black/5 will-change-transform origin-top ${item.bg}`}
+                >
+                  <div className="w-full md:w-1/2 p-10 md:p-16 flex flex-col justify-center">
+                    <span className="text-[#a27725] tracking-[0.2em] text-sm md:text-base mb-6 font-light uppercase">Phase {item.step}</span>
+                    <h3 className="text-3xl md:text-5xl font-light mb-6 md:mb-8">{item.title}</h3>
+                    <p className="text-[#1a1a1a]/60 text-lg font-light leading-relaxed">{item.desc}</p>
+                  </div>
+                  <div className="w-full md:w-1/2 h-[30vh] md:h-auto relative">
+                    <Image
+                      src={`/images/${item.img}`}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* HORIZONTAL MATERIALS */}
-        <section id="materials" className="hidden md:block relative overflow-hidden bg-white border-y border-black/5">
+        <section id="materials" className="hidden md:block relative overflow-hidden bg-white">
           <div
             ref={containerRef}
             className="horizontal-wrapper flex w-[400vw] h-screen will-change-transform"
@@ -352,7 +462,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                   Natural <span className="italic serif text-[#a27725]">Wood</span>
                 </h3>
                 <div className="grid md:grid-cols-3 gap-10">
-                  {[1,2,3].map((num) => (
+                  {[1, 2, 3].map((num) => (
                     <div key={num} className="overflow-hidden rounded-2xl group cursor-pointer relative">
                       <div className="absolute inset-0 border border-black/5 rounded-2xl z-20 pointer-events-none group-hover:border-[#a27725]/50 transition-colors duration-500"></div>
                       <Image
@@ -360,7 +470,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                         alt="Wood texture"
                         width={600}
                         height={600}
-                        className="material-img w-full aspect-square object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                        className="material-img w-full aspect-square object-cover opacity-90 group-hover:opacity-100 transition-all duration-700"
                       />
                     </div>
                   ))}
@@ -375,7 +485,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                   Refined <span className="italic serif text-[#a27725]">Leather</span>
                 </h3>
                 <div className="grid md:grid-cols-3 gap-10">
-                  {[1,2,3].map((num) => (
+                  {[1, 2, 3].map((num) => (
                     <div key={num} className="overflow-hidden rounded-2xl group cursor-pointer relative">
                       <div className="absolute inset-0 border border-black/5 rounded-2xl z-20 pointer-events-none group-hover:border-[#a27725]/50 transition-colors duration-500"></div>
                       <Image
@@ -383,7 +493,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                         alt="Leather texture"
                         width={600}
                         height={600}
-                        className="material-img w-full aspect-square object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                        className="material-img w-full aspect-square object-cover opacity-90 group-hover:opacity-100 transition-all duration-700"
                       />
                     </div>
                   ))}
@@ -398,7 +508,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                   Stone & <span className="italic serif text-[#a27725]">Marble</span>
                 </h3>
                 <div className="grid md:grid-cols-3 gap-10">
-                  {[1,2,3].map((num) => (
+                  {[1, 2, 3].map((num) => (
                     <div key={num} className="overflow-hidden rounded-2xl group cursor-pointer relative">
                       <div className="absolute inset-0 border border-black/5 rounded-2xl z-20 pointer-events-none group-hover:border-[#a27725]/50 transition-colors duration-500"></div>
                       <Image
@@ -406,7 +516,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                         alt="Stone texture"
                         width={600}
                         height={600}
-                        className="material-img w-full aspect-square object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                        className="material-img w-full aspect-square object-cover opacity-90 group-hover:opacity-100 transition-all duration-700"
                       />
                     </div>
                   ))}
@@ -417,11 +527,11 @@ export default function HomeClient({ posts }: { posts: any[] }) {
         </section>
 
         {/* MOBILE MATERIALS */}
-        <section id="materials-mobile" className="md:hidden py-20 px-6 bg-white border-y border-black/5">
+        <section id="materials-mobile" className="md:hidden py-20 px-6 bg-white">
           <div className="text-center mb-20">
             <p className="text-xs tracking-[0.2em] text-[#a27725] mb-6 uppercase">The Essentials</p>
             <h2 className="text-4xl mb-6 font-light">
-               Material <span className="italic serif text-[#a27725]">Palette</span>
+              Material <span className="italic serif text-[#a27725]">Palette</span>
             </h2>
             <p className="text-[#1a1a1a]/60 max-w-md mx-auto font-light">
               A curated exploration of textures, finishes, and tones that define our spaces.
@@ -454,19 +564,32 @@ export default function HomeClient({ posts }: { posts: any[] }) {
           ))}
         </section>
 
-        {/* TRUST */}
-        <section className="py-24 md:py-40 text-center px-6">
-          <p className="text-xs tracking-[0.3em] text-[#a27725] mb-16 uppercase">
+        {/* TRUST / MARQUEE */}
+        <section className="py-20 md:py-32 overflow-hidden bg-white">
+          <p className="text-xs tracking-[0.3em] text-[#a27725] mb-16 text-center uppercase">
             Selected Collaborations & Explorations
           </p>
-          <div className="flex justify-center items-center gap-12 md:gap-32 flex-wrap max-w-[1400px] mx-auto">
-            {[1, 2, 3, 4].map(i => (
-              <img
-                key={i}
-                src={`/images/client${i}.png`}
-                className="h-12 md:h-16 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition duration-500"
-              />
-            ))}
+          <div className="relative flex overflow-x-hidden w-full">
+            <div className="flex w-max animate-marquee">
+              {[...Array(2)].map((_, groupIndex) => (
+                <div key={groupIndex} className="flex flex-nowrap items-center gap-20 md:gap-40 pr-20 md:pr-40">
+                  {[
+                    "https://placehold.co/500x120/transparent/1a1a1a/?text=ARCHITECTURAL+DIGEST&font=playfair-display",
+                    "https://placehold.co/300x120/transparent/1a1a1a/?text=VOGUE&font=playfair-display",
+                    "https://placehold.co/300x120/transparent/1a1a1a/?text=ELLE+DECOR&font=playfair-display",
+                    "https://placehold.co/300x120/transparent/1a1a1a/?text=GQ&font=playfair-display",
+                    "https://placehold.co/400x120/transparent/1a1a1a/?text=HARPER'S+BAZAAR&font=playfair-display"
+                  ].map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt={`Partner Logo ${i}`}
+                      className="h-8 md:h-12 opacity-40 hover:opacity-100 transition duration-500 object-contain min-w-[120px] max-w-[240px]"
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -478,7 +601,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-20">
             {posts.map((post, i) => (
               <FadeUp key={i}>
-                <div className="group cursor-pointer">
+                <Link href={`/posts/${post.slug}`} className="group cursor-pointer block">
                   <p className="text-xs text-[#a27725] mb-4 uppercase tracking-[0.2em]">Insight / Insight</p>
                   <h3 className="text-2xl mb-6 font-light group-hover:text-[#a27725] transition-colors">{post.title}</h3>
                   <div
@@ -486,7 +609,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                     dangerouslySetInnerHTML={{ __html: post.excerpt }}
                   />
                   <div className="mt-8 uppercase text-xs tracking-widest border-b border-black/20 pb-2 inline-block group-hover:border-[#a27725] transition-colors">Read More</div>
-                </div>
+                </Link>
               </FadeUp>
             ))}
           </div>
@@ -518,18 +641,47 @@ export default function HomeClient({ posts }: { posts: any[] }) {
         </section>
 
         {/* CTA */}
-        <section id="contact" className="py-32 md:py-64 relative overflow-hidden text-center px-6 md:px-10">
+        <section id="contact" className="py-32 md:py-48 relative overflow-hidden text-center px-6 md:px-10">
           <div className="absolute inset-0 bg-white -z-10" />
-          <h2 className="text-5xl md:text-8xl mb-10 font-light text-[#1a1a1a]">
+          <h2 className="text-5xl md:text-8xl mb-10 font-light text-[#1a1a1a] tracking-tight">
             Let's Create Something<br className="hidden md:block" /> <span className="italic serif text-[#a27725]">Exceptional</span>
           </h2>
           <p className="text-[#1a1a1a]/70 max-w-2xl mx-auto mb-16 text-xl font-light leading-relaxed">
             Whether you're designing a new space or redefining an existing one, we bring
             clarity, craftsmanship, and character to every project.
           </p>
-          <button className="px-12 py-5 bg-[#a27725] text-white rounded-full font-medium tracking-widest uppercase hover:bg-black transition-colors duration-500 hover:shadow-[0_0_40px_rgba(162,119,37,0.3)]">
-            Start Your Project
-          </button>
+
+          <div className="max-w-md mx-auto relative">
+            <form onSubmit={handleQuickLead} className="flex flex-col sm:flex-row gap-4">
+              <input
+                type="email"
+                required
+                value={quickEmail}
+                onChange={(e) => setQuickEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 px-6 py-4 rounded-full border border-black/20 outline-none focus:border-black transition"
+              />
+              <button
+                type="submit"
+                aria-label="Submit lead form"
+                disabled={quickStatus === "loading" || quickStatus === "success"}
+                className="px-8 py-4 bg-[#a27725] text-white rounded-full font-medium tracking-widest uppercase hover:bg-black transition-colors duration-500 disabled:opacity-50"
+              >
+                {quickStatus === "loading" ? "..." : quickStatus === "success" ? "Sent" : "Join"}
+              </button>
+            </form>
+            {quickStatus === "success" && (
+              <p className="text-sm text-green-700 mt-4 tracking-wide absolute w-full text-center">
+                We'll be in touch shortly.
+              </p>
+            )}
+          </div>
+
+          <div className="mt-16">
+            <Link href="/get-quote" className="text-sm tracking-widest uppercase text-[#1a1a1a]/50 hover:text-black transition border-b border-transparent hover:border-black pb-1">
+              or fill out a detailed project quote
+            </Link>
+          </div>
         </section>
       </main>
     </>

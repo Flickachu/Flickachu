@@ -6,18 +6,24 @@ export default function BackToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    let lastY = window.scrollY;
+
     const toggle = () => {
-      const scrollY = window.scrollY;
-      const scrollPosition = window.innerHeight + scrollY;
+      const currentY = window.scrollY;
+      const isScrollingUp = currentY < lastY;
+      lastY = currentY;
+
+      const scrollPosition = window.innerHeight + currentY;
       const pageHeight = document.body.offsetHeight;
 
-      const isVisible = scrollY > 300;
+      // Show if we're past 1.5 screen heights down
+      const isPastHalf = currentY > window.innerHeight * 1.5;
       const nearFooter = scrollPosition > pageHeight - 200;
 
-      setVisible(isVisible && !nearFooter);
+      setVisible(isPastHalf && isScrollingUp && !nearFooter);
     };
 
-    window.addEventListener("scroll", toggle);
+    window.addEventListener("scroll", toggle, { passive: true });
     return () => window.removeEventListener("scroll", toggle);
   }, []);
 

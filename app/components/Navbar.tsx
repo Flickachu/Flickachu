@@ -63,11 +63,10 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
       <header
         className={`fixed top-0 left-0 w-full z-50 border-b transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
         ${showNav || menuOpen ? "translate-y-0" : "-translate-y-full"}
-        ${
-          isScrolled
+        ${isScrolled
             ? "bg-white/90 md:backdrop-blur-md border-black/10 shadow-sm"
             : "bg-transparent border-transparent"
-        }`}
+          }`}
       >
         <div
           className={`max-w-[1400px] mx-auto flex justify-between items-center px-6 md:px-10 py-5 transition-colors duration-300
@@ -111,20 +110,18 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
             <NavLink
               href="/get-quote"
               className={`hidden md:block px-6 py-2 rounded-full text-xs tracking-wide border transition-all duration-300
-              ${
-                isScrolled || forceDark
+              ${isScrolled || forceDark
                   ? "border-black hover:bg-black hover:text-white"
                   : "border-white hover:bg-white hover:text-black"
-              }`}
+                }`}
             >
               Get Quote
             </NavLink>
 
             {/* HAMBURGER */}
             <button
-              className={`md:hidden text-2xl transition-colors duration-300 ${
-                isScrolled || forceDark ? "text-black" : "text-white"
-              }`}
+              className={`md:hidden text-2xl transition-colors duration-300 ${isScrolled || forceDark ? "text-black" : "text-white"
+                }`}
               onClick={() => setMenuOpen((prev) => !prev)}
             >
               ☰

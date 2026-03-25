@@ -2,27 +2,25 @@
 
 import { useEffect, useState } from "react";
 import {
-  Home,
   Info,
   Layers,
   Grid,
   Box,
-  FileText,
   Mail,
+  Activity,
 } from "lucide-react";
 
 const sections = [
-  { id: "hero", label: "Home", icon: <Home size={18} /> },
   { id: "about", label: "About", icon: <Info size={18} /> },
   { id: "services", label: "Services", icon: <Layers size={18} /> },
   { id: "projects", label: "Projects", icon: <Grid size={18} /> },
+  { id: "process", label: "Process", icon: <Activity size={18} /> },
   { id: "materials", label: "Materials", icon: <Box size={18} /> },
-  { id: "insights", label: "Insights", icon: <FileText size={18} /> },
   { id: "contact", label: "Contact", icon: <Mail size={18} /> },
 ];
 
 export default function SectionNav() {
-  const [active, setActive] = useState("hero");
+  const [active, setActive] = useState("about");
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -37,7 +35,7 @@ export default function SectionNav() {
             setActive(section.id);
           }
         },
-        { threshold: 0.5 }
+        { rootMargin: "-40% 0px -40% 0px" } // Triggers when section crosses the middle of the viewport
       );
 
       observer.observe(el);
@@ -63,6 +61,7 @@ export default function SectionNav() {
           {/* 🔥 EXPANDING PILL */}
           <button
             onClick={() => scrollTo(section.id)}
+            aria-label={`Scroll to ${section.label} section`}
           className={`group absolute right-0 top-0 h-12 rounded-full flex items-center justify-end overflow-hidden transition-all duration-300 ease-out backdrop-blur-md border ${
   active === section.id
     ? "bg-blue-600 text-white border-blue-600"
