@@ -2,13 +2,11 @@ import { projects } from "@/lib/projects";
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export default async function CaseStudyPage({ params }: Props) {
-  const slug = params.slug;
-
-  console.log("slug:", slug); // DEBUG
+  const { slug } = await params;
 
   const project = projects.find((p) => p.slug === slug);
 
@@ -131,4 +129,12 @@ export default async function CaseStudyPage({ params }: Props) {
 
     </main>
   );
+}
+
+/* ================= STATIC PARAMS (CRITICAL) ================= */
+
+export async function generateStaticParams() {
+  return projects.map((p) => ({
+    slug: p.slug,
+  }));
 }

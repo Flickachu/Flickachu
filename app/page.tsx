@@ -1,8 +1,8 @@
 import HomeClient from "./components/HomeClient";
 import { Suspense } from "react";
 
-// Required for Next.js 16 instant client-side navigations
-export const unstable_instant = { prefetch: 'static' };
+// Required for Next.js 16 instant client-side navigations (commented out to avoid Windows Turbopack panic)
+// export const unstable_instant = { prefetch: 'static' };
 
 async function getPosts() {
   // Mock data representing CMS fetch

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-export const unstable_instant = { prefetch: 'static' };
+export const unstable_instant = false;
 
 export default async function PostPage(props: any) {
   return (
