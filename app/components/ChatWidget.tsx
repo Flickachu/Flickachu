@@ -293,18 +293,17 @@ export default function ChatWidget() {
   return (
     <>
       {/* FLOATING BUTTON DOCKED NEXT TO BACK-TO-TOP */}
-      <div 
-        className={`fixed bottom-8 right-6 z-[100] flex items-center group transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
-        }`}
+      <div
+        className={`fixed bottom-8 right-6 z-[100] flex items-center group transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
+          }`}
         onMouseEnter={() => setShowBubble(true)}
         onMouseLeave={() => setShowBubble(false)}
       >
         {/* OCCASIONAL SOFT BUBBLE */}
         {!open && (
-           <div className={`absolute right-full mr-4 bg-white/90 backdrop-blur-md border border-black/10 text-black text-xs font-medium tracking-wide px-4 py-2 rounded-2xl rounded-br-sm shadow-[0_4px_20px_rgba(0,0,0,0.08)] whitespace-nowrap transition-all duration-700 pointer-events-none ${showBubble ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"}`}>
-             Get a quick quote
-           </div>
+          <div className={`absolute right-full mr-4 bg-white/90 backdrop-blur-md border border-black/10 text-black text-xs font-medium tracking-wide px-4 py-2 rounded-2xl rounded-br-sm shadow-[0_4px_20px_rgba(0,0,0,0.08)] whitespace-nowrap transition-all duration-700 pointer-events-none ${showBubble ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"}`}>
+            Get a quick quote
+          </div>
         )}
 
         <button
@@ -322,9 +321,8 @@ export default function ChatWidget() {
       </div>
 
       {open && (
-        <div className={`fixed bottom-24 right-6 z-[100] w-[340px] h-[500px] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/90 backdrop-blur-xl flex flex-col origin-bottom-right transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] animate-in slide-in-from-bottom-4 fade-in ${
-          isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
-        }`}>
+        <div className={`fixed bottom-24 right-20 z-[100] w-[340px] h-[500px] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/90 backdrop-blur-xl flex flex-col origin-bottom-right transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] animate-in slide-in-from-bottom-4 fade-in ${isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
+          }`}>
 
           <div className="flex justify-between items-center px-5 py-4 border-b border-black/10 bg-white/50">
             <p className="text-sm font-semibold tracking-wide">Assistant</p>
@@ -377,15 +375,15 @@ export default function ChatWidget() {
                   step === "name"
                     ? "Your name"
                     : contactPreference === "phone"
-                    ? "Phone number"
-                    : "Email address"
+                      ? "Phone number"
+                      : "Email address"
                 }
                 aria-label={
                   step === "name"
                     ? "Enter your name"
                     : contactPreference === "phone"
-                    ? "Enter phone number"
-                    : "Enter email address"
+                      ? "Enter phone number"
+                      : "Enter email address"
                 }
               />
               <button
