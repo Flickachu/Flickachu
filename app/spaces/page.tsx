@@ -111,22 +111,36 @@ export default function PropertyPage() {
           {/* COLORS - order 3 on mobile */}
           <div className="order-3 w-full self-start md:col-start-1 md:row-start-2 mt-4">
             <FadeUp delay={0.3}>
-              <p className="text-xs tracking-[0.2em] mb-5 text-neutral-400">
+              <p className="text-xs tracking-[0.2em] mb-8 text-neutral-400">
                 COLOR PALETTE
               </p>
-              <div className="flex gap-5 flex-wrap">
+              <div className="flex gap-3 flex-wrap">
                 {Object.keys(images).map((c) => (
                   <button
                     key={c}
                     aria-label={`Select ${c} color palette`}
-                    className={`w-12 h-12 md:w-10 md:h-10 rounded-full border border-black/10 shadow-sm transition-all duration-300
-                    ${activeColor === c
-                        ? "scale-110 ring-2 ring-neutral-400 ring-offset-2 ring-offset-[#f8f8f8]"
-                        : "hover:scale-110"
-                      }`}
+                    className="relative flex flex-col items-center transition-all duration-300 hover:scale-105"
                     onClick={() => handleColorChange(c as typeof color)}
-                    style={{ backgroundColor: c === "cream" ? "#f5f5dc" : c }}
-                  />
+                  >
+                    {activeColor === c && (
+                      <span className="absolute -top-5 text-[9px] tracking-[0.15em] font-semibold text-neutral-700 uppercase whitespace-nowrap">
+                        Selected
+                      </span>
+                    )}
+                    <div
+                      className={`w-11 h-11 rounded-lg overflow-hidden transition-all duration-300 ${
+                        activeColor === c
+                          ? "ring-[1.5px] ring-blue-600 ring-offset-[3px] ring-offset-[#f8f8f8]"
+                          : "border border-black/10"
+                      }`}
+                    >
+                      <img
+                        src={`/images/picker-${c}.png`}
+                        alt={`${c} swatch`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </button>
                 ))}
               </div>
             </FadeUp>
