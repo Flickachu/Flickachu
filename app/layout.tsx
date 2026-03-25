@@ -4,7 +4,6 @@ import {
   Playfair_Display,
   Great_Vibes,
 } from "next/font/google";
-import Navbar from "./components/Navbar";
 import ChatWidget from "./components/ChatWidget";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import Footer from "./components/Footer";
