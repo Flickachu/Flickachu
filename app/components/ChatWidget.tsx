@@ -140,7 +140,6 @@ export default function ChatWidget() {
   };
 
   const handleOptionClick = async (value: string) => {
-    // Handle preference step specially
     if (step === "preference") {
       const pref = value === "Phone Number" ? "phone" : "email";
       setContactPreference(pref);
@@ -182,7 +181,6 @@ export default function ChatWidget() {
 
     const next = nextStepMap[step];
 
-    // Simulate natural typing delay
     await new Promise((r) => setTimeout(r, 600));
 
     const aiReply = getBotReply(next, value);
@@ -276,7 +274,6 @@ export default function ChatWidget() {
       const scrollPosition = window.innerHeight + currentY;
       const pageHeight = document.body.offsetHeight;
 
-      // Show if we're past 1.5 screen heights down
       const isPastHalf = currentY > window.innerHeight * 1.5;
       const nearFooter = scrollPosition > pageHeight - 200;
 
@@ -287,7 +284,6 @@ export default function ChatWidget() {
     return () => window.removeEventListener("scroll", toggle);
   }, []);
 
-  // Determine if we show a text input (name or contact steps)
   const showTextInput = step === "name" || step === "contact";
 
   return (
@@ -299,9 +295,11 @@ export default function ChatWidget() {
         onMouseEnter={() => setShowBubble(true)}
         onMouseLeave={() => setShowBubble(false)}
       >
-        {/* OCCASIONAL SOFT BUBBLE */}
         {!open && (
-          <div className={`absolute right-full mr-4 bg-white/90 backdrop-blur-md border border-black/10 text-black text-xs font-medium tracking-wide px-4 py-2 rounded-2xl rounded-br-sm shadow-[0_4px_20px_rgba(0,0,0,0.08)] whitespace-nowrap transition-all duration-700 pointer-events-none ${showBubble ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"}`}>
+          <div
+            className={`absolute right-full mr-4 bg-white/90 backdrop-blur-md border border-black/10 text-black text-xs font-medium tracking-wide px-4 py-2 rounded-2xl rounded-br-sm shadow-[0_4px_20px_rgba(0,0,0,0.08)] whitespace-nowrap transition-all duration-700 pointer-events-none ${showBubble ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"
+              }`}
+          >
             Get a quick quote
           </div>
         )}
@@ -312,91 +310,104 @@ export default function ChatWidget() {
           aria-label={open ? "Close Chat Assistant" : "Open Chat Assistant"}
           className="w-12 h-12 rounded-full backdrop-blur-md bg-white/50 border border-black/10 shadow-sm flex items-center justify-center hover:bg-white/90 hover:scale-105 transition-all duration-300 relative"
         >
-          {/* Extremely quiet ping ring */}
           {!open && (
-            <span className="absolute inset-0 rounded-full border border-[#a27725] animate-ping opacity-20" style={{ animationDuration: '3s' }}></span>
+            <span
+              className="absolute inset-0 rounded-full border border-[#a27725] animate-ping opacity-20"
+              style={{ animationDuration: "3s" }}
+            ></span>
           )}
-          {open ? <X size={18} className="text-black relative z-[101]" /> : <MessageSquare size={18} className="text-[#a27725] relative z-[101]" />}
+          {open ? (
+            <X size={18} className="text-black relative z-[101]" />
+          ) : (
+            <MessageSquare size={18} className="text-[#a27725] relative z-[101]" />
+          )}
         </button>
       </div>
 
-      {open && (
-        <div className={`fixed bottom-24 right-20 z-[100] w-[340px] h-[500px] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/90 backdrop-blur-xl flex flex-col origin-bottom-right transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] animate-in slide-in-from-bottom-4 fade-in ${isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
-          }`}>
+      {/* CHAT WINDOW (Always rendered, but hidden via CSS when closed) */}
+      <div
+        className={`fixed bottom-24 right-6 md:right-20 z-[100] w-[340px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/90 backdrop-blur-xl flex flex-col origin-bottom-right transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${open
+            ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 scale-90 translate-y-8 pointer-events-none"
+          }`}
+      >
+        <div className="flex justify-between items-center px-5 py-4 border-b border-black/10 bg-white/50">
+          <p className="text-sm font-semibold tracking-wide">Assistant</p>
+          <button
+            onClick={() => setOpen(false)}
+            aria-label="Close chat"
+            className="hover:rotate-90 transition-transform"
+          >
+            <X size={16} />
+          </button>
+        </div>
 
-          <div className="flex justify-between items-center px-5 py-4 border-b border-black/10 bg-white/50">
-            <p className="text-sm font-semibold tracking-wide">Assistant</p>
-            <button onClick={() => setOpen(false)} aria-label="Close chat" className="hover:rotate-90 transition-transform">
-              <X size={16} />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 text-sm">
-            {messages.map((m, i) => (
-              <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`px-4 py-3 rounded-2xl max-w-[85%] leading-relaxed shadow-sm ${m.role === "user"
-                  ? "bg-[#1a1a1a] text-white rounded-br-none"
-                  : "bg-white border border-black/5 rounded-bl-none text-black/80"
-                  }`}>
-                  {m.content}
-                </div>
-              </div>
-            ))}
-
-            {/* Show option pills for steps that have options (not name/contact/done) */}
-            {step in options && step !== "done" && (
-              <div className="flex flex-col items-end gap-2 mt-2 pt-2">
-                {options[step]?.map((opt) => (
-                  <button
-                    key={opt}
-                    aria-label={`Select ${opt}`}
-                    onClick={() => handleOptionClick(opt)}
-                    className="text-xs px-4 py-2.5 bg-white border border-black/5 rounded-full hover:bg-[#1a1a1a] hover:text-white transition-all w-max shadow-sm"
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {loading && <p className="text-xs text-black/40 italic ml-2">Typing...</p>}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {showTextInput && (
-            <div className="p-4 border-t bg-white/50 border-black/10 flex gap-2">
-              <input
-                className="flex-1 px-4 py-2.5 rounded-full text-sm bg-white border border-black/10 outline-none focus:border-black transition shadow-sm"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleInputSubmit()}
-                placeholder={
-                  step === "name"
-                    ? "Your name"
-                    : contactPreference === "phone"
-                      ? "Phone number"
-                      : "Email address"
-                }
-                aria-label={
-                  step === "name"
-                    ? "Enter your name"
-                    : contactPreference === "phone"
-                      ? "Enter phone number"
-                      : "Enter email address"
-                }
-              />
-              <button
-                onClick={handleInputSubmit}
-                aria-label="Send"
-                className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-medium hover:bg-[#a27725] transition"
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 text-sm">
+          {messages.map((m, i) => (
+            <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`px-4 py-3 rounded-2xl max-w-[85%] leading-relaxed shadow-sm ${m.role === "user"
+                    ? "bg-[#1a1a1a] text-white rounded-br-none"
+                    : "bg-white border border-black/5 rounded-bl-none text-black/80"
+                  }`}
               >
-                Send
-              </button>
+                {m.content}
+              </div>
+            </div>
+          ))}
+
+          {step in options && step !== "done" && (
+            <div className="flex flex-col items-end gap-2 mt-2 pt-2">
+              {options[step]?.map((opt) => (
+                <button
+                  key={opt}
+                  aria-label={`Select ${opt}`}
+                  onClick={() => handleOptionClick(opt)}
+                  className="text-xs px-4 py-2.5 bg-white border border-black/5 rounded-full hover:bg-[#1a1a1a] hover:text-white transition-all w-max shadow-sm"
+                >
+                  {opt}
+                </button>
+              ))}
             </div>
           )}
+
+          {loading && <p className="text-xs text-black/40 italic ml-2">Typing...</p>}
+
+          <div ref={messagesEndRef} />
         </div>
-      )}
+
+        {showTextInput && (
+          <div className="p-4 border-t bg-white/50 border-black/10 flex gap-2">
+            <input
+              className="flex-1 px-4 py-2.5 rounded-full text-sm bg-white border border-black/10 outline-none focus:border-black transition shadow-sm"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleInputSubmit()}
+              placeholder={
+                step === "name"
+                  ? "Your name"
+                  : contactPreference === "phone"
+                    ? "Phone number"
+                    : "Email address"
+              }
+              aria-label={
+                step === "name"
+                  ? "Enter your name"
+                  : contactPreference === "phone"
+                    ? "Enter phone number"
+                    : "Enter email address"
+              }
+            />
+            <button
+              onClick={handleInputSubmit}
+              aria-label="Send"
+              className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-medium hover:bg-[#a27725] transition"
+            >
+              Send
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 }
