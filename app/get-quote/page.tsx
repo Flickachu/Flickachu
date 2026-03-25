@@ -8,14 +8,12 @@ import Image from "next/image";
 
 export default function QuotePage() {
   const pathname = usePathname();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    projectType: "Residential",
-    budget: "₹2L – ₹5L",
-    message: "",
-  });
+  const [name, setName] = useState("");
+  const [preference, setPreference] = useState<"phone" | "email" | "">("");
+  const [contactValue, setContactValue] = useState("");
+  const [space, setSpace] = useState("Residential");
+  const [budget, setBudget] = useState("₹2L – ₹5L");
+  const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
 
   useEffect(() => {
@@ -24,7 +22,7 @@ export default function QuotePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) return;
+    if (!name || !contactValue) return;
 
     setStatus("loading");
     try {
@@ -32,18 +30,25 @@ export default function QuotePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contact: `${formData.name} - ${formData.email} - ${formData.phone}`,
-          requirement: formData.message,
-          space: formData.projectType,
-          budget: formData.budget,
+          space: space,
+          style: "",
+          requirement: message,
+          budget: budget,
+          timeline: "",
+          size: "",
+          contact: contactValue,
           page: window.location.pathname,
           source: "get_quote_page",
+          name: name,
         }),
       });
       setStatus("success");
-      setFormData({
-        name: "", email: "", phone: "", projectType: "Residential", budget: "₹2L – ₹5L", message: ""
-      });
+      setName("");
+      setPreference("");
+      setContactValue("");
+      setSpace("Residential");
+      setBudget("₹2L – ₹5L");
+      setMessage("");
       setTimeout(() => setStatus("idle"), 5000);
     } catch {
       setStatus("idle");
@@ -72,7 +77,7 @@ export default function QuotePage() {
             </h1>
             <p className="mt-6 text-white/70 max-w-xl">
               Tell us about your space, your vision, and your requirements.
-              We’ll craft a tailored solution for you.
+              We'll craft a tailored solution for you.
             </p>
           </FadeUp>
         </div>
@@ -88,41 +93,65 @@ export default function QuotePage() {
               <input
                 type="text"
                 required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
                 className="w-full border-b border-gray-300 py-3 bg-transparent outline-none focus:border-black transition-colors"
               />
             </div>
 
-            {/* EMAIL */}
+            {/* PREFERENCE */}
             <div>
-              <label className="text-sm text-gray-500">Email</label>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full border-b border-gray-300 py-3 bg-transparent outline-none focus:border-black transition-colors"
-              />
+              <label className="text-sm text-gray-500 mb-3 block">How should we reach you?</label>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => { setPreference("phone"); setContactValue(""); }}
+                  className={`px-6 py-2.5 rounded-full text-sm tracking-wide border transition-all duration-300 ${
+                    preference === "phone"
+                      ? "bg-[#1a1a1a] text-white border-[#1a1a1a]"
+                      : "bg-transparent text-[#1a1a1a]/70 border-black/10 hover:border-black/30"
+                  }`}
+                >
+                  Phone
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setPreference("email"); setContactValue(""); }}
+                  className={`px-6 py-2.5 rounded-full text-sm tracking-wide border transition-all duration-300 ${
+                    preference === "email"
+                      ? "bg-[#1a1a1a] text-white border-[#1a1a1a]"
+                      : "bg-transparent text-[#1a1a1a]/70 border-black/10 hover:border-black/30"
+                  }`}
+                >
+                  Email
+                </button>
+              </div>
             </div>
 
-            {/* PHONE */}
-            <div>
-              <label className="text-sm text-gray-500">Phone</label>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full border-b border-gray-300 py-3 bg-transparent outline-none focus:border-black transition-colors"
-              />
-            </div>
+            {/* CONTACT FIELD (conditional) */}
+            {preference && (
+              <div>
+                <label className="text-sm text-gray-500">
+                  {preference === "phone" ? "Phone Number" : "Email Address"}
+                </label>
+                <input
+                  type={preference === "phone" ? "tel" : "email"}
+                  required
+                  value={contactValue}
+                  onChange={(e) => setContactValue(e.target.value)}
+                  placeholder={preference === "phone" ? "+91 98765 43210" : "you@example.com"}
+                  className="w-full border-b border-gray-300 py-3 bg-transparent outline-none focus:border-black transition-colors"
+                />
+              </div>
+            )}
 
-            {/* PROJECT TYPE */}
+            {/* PROJECT TYPE → maps to "space" column */}
             <div>
               <label className="text-sm text-gray-500">Project Type</label>
               <select
-                value={formData.projectType}
-                onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                value={space}
+                onChange={(e) => setSpace(e.target.value)}
                 className="w-full border-b border-gray-300 py-3 bg-transparent outline-none focus:border-black transition-colors"
               >
                 <option>Residential</option>
@@ -131,12 +160,12 @@ export default function QuotePage() {
               </select>
             </div>
 
-            {/* BUDGET */}
+            {/* BUDGET → maps to "budget" column */}
             <div>
               <label className="text-sm text-gray-500">Estimated Budget</label>
               <select
-                value={formData.budget}
-                onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
                 className="w-full border-b border-gray-300 py-3 bg-transparent outline-none focus:border-black transition-colors"
               >
                 <option>₹2L – ₹5L</option>
@@ -145,14 +174,14 @@ export default function QuotePage() {
               </select>
             </div>
 
-            {/* MESSAGE */}
+            {/* MESSAGE → maps to "requirement" column */}
             <div>
               <label className="text-sm text-gray-500">Project Details</label>
               <textarea
                 rows={4}
                 required
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 className="w-full border-b border-gray-300 py-3 bg-transparent outline-none focus:border-black transition-colors"
                 placeholder="Tell us about your space, style, timeline..."
               />
@@ -161,7 +190,7 @@ export default function QuotePage() {
             {/* CTA */}
             <button
               type="submit"
-              disabled={status === "loading" || status === "success"}
+              disabled={status === "loading" || status === "success" || !preference}
               className="mt-6 px-8 py-4 border rounded-full hover:bg-black hover:text-white transition disabled:opacity-50 disabled:pointer-events-none"
             >
               {status === "loading" ? "Submitting..." : status === "success" ? "Quote Requested!" : "Request Quote"}

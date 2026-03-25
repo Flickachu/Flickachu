@@ -25,6 +25,8 @@ type Step =
   | "budget"
   | "timeline"
   | "size"
+  | "name"
+  | "preference"
   | "contact"
   | "done";
 
@@ -54,6 +56,8 @@ export default function ChatWidget() {
 
   const [step, setStep] = useState<Step>("space");
   const [input, setInput] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [contactPreference, setContactPreference] = useState<"phone" | "email" | "">("");
 
   const [leadData, setLeadData] = useState<LeadData>({
     space: "",
@@ -67,13 +71,14 @@ export default function ChatWidget() {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const options = {
+  const options: Record<string, string[]> = {
     space: ["Living Room", "Bedroom", "Kitchen", "Office", "Full Home"],
     style: ["Modern", "Minimal", "European", "Classic", "Luxury"],
     requirement: ["Relaxation", "Entertainment", "Family Use", "Work From Home"],
     budget: ["₹2L–₹5L", "₹5L–₹10L", "₹10L–₹20L", "₹20L+"],
     timeline: ["Immediately", "1–3 Months", "3–6 Months", "6+ Months"],
     size: ["<500 sq.ft", "500–1000 sq.ft", "1000–2000 sq.ft", "2000+ sq.ft"],
+    preference: ["Phone Number", "Email Address"],
   };
 
   const nextStepMap: Record<Step, Step> = {
@@ -82,7 +87,9 @@ export default function ChatWidget() {
     requirement: "budget",
     budget: "timeline",
     timeline: "size",
-    size: "contact",
+    size: "name",
+    name: "preference",
+    preference: "contact",
     contact: "done",
     done: "done",
   };
@@ -99,7 +106,7 @@ export default function ChatWidget() {
         {
           role: "assistant",
           content:
-            "I’ll help you shape this properly. What space are you designing?",
+            "I'll help you shape this properly. What space are you designing?",
         },
       ]);
     }
@@ -117,8 +124,14 @@ export default function ChatWidget() {
         return `That helps us plan perfectly. When are you looking to have this completed?`;
       case "size":
         return `Great. And roughly, what's the size of the space?`;
+      case "name":
+        return `Perfect, that gives our design team a clear picture. May I have your name please?`;
+      case "preference":
+        return `Nice to meet you, ${value}! Would you prefer to be contacted via phone or email?`;
       case "contact":
-        return `Perfect, that gives our design team a clear picture. What’s the best email or phone number to reach you at?`;
+        return contactPreference === "phone"
+          ? `Great, what's the best phone number to reach you at?`
+          : `Great, what's the best email address to reach you at?`;
       case "done":
         return `Thank you! Our lead designer will reach out shortly.`;
       default:
@@ -127,9 +140,34 @@ export default function ChatWidget() {
   };
 
   const handleOptionClick = async (value: string) => {
+    // Handle preference step specially
+    if (step === "preference") {
+      const pref = value === "Phone Number" ? "phone" : "email";
+      setContactPreference(pref);
+
+      const userMessage: Message = { role: "user", content: value };
+      setMessages((prev) => [...prev, userMessage]);
+      setLoading(true);
+
+      await new Promise((r) => setTimeout(r, 600));
+
+      const aiReply = pref === "phone"
+        ? `Great, what's the best phone number to reach you at?`
+        : `Great, what's the best email address to reach you at?`;
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: aiReply },
+      ]);
+
+      setStep("contact");
+      setLoading(false);
+      return;
+    }
+
     let newLead = { ...leadData };
 
-    if (step !== "done") {
+    if (step in options && step !== "done" && step !== "name" && step !== "contact") {
       newLead = {
         ...newLead,
         [step]: value,
@@ -139,17 +177,10 @@ export default function ChatWidget() {
     setLeadData(newLead);
 
     const userMessage: Message = { role: "user", content: value };
-    const newMessages = [...messages, userMessage];
-
-    setMessages(newMessages);
+    setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
 
     const next = nextStepMap[step];
-
-    if (next === "done") {
-      await sendLead(newLead);
-      return;
-    }
 
     // Simulate natural typing delay
     await new Promise((r) => setTimeout(r, 600));
@@ -168,19 +199,41 @@ export default function ChatWidget() {
   const handleInputSubmit = async () => {
     if (!input.trim()) return;
 
-    const value = input;
+    const value = input.trim();
 
-    const newLead = { ...leadData, contact: value };
-    setLeadData(newLead);
+    if (step === "name") {
+      setClientName(value);
 
-    const userMessage: Message = { role: "user", content: value };
-    const newMessages = [...messages, userMessage];
+      const userMessage: Message = { role: "user", content: value };
+      setMessages((prev) => [...prev, userMessage]);
+      setInput("");
+      setLoading(true);
 
-    setMessages(newMessages);
-    setInput("");
-    setLoading(true);
+      await new Promise((r) => setTimeout(r, 600));
 
-    await sendLead(newLead);
+      const aiReply = getBotReply("preference", value);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: aiReply },
+      ]);
+
+      setStep("preference");
+      setLoading(false);
+      return;
+    }
+
+    if (step === "contact") {
+      const newLead = { ...leadData, contact: value };
+      setLeadData(newLead);
+
+      const userMessage: Message = { role: "user", content: value };
+      setMessages((prev) => [...prev, userMessage]);
+      setInput("");
+      setLoading(true);
+
+      await sendLead(newLead);
+      return;
+    }
   };
 
   const sendLead = async (data: LeadData) => {
@@ -193,6 +246,7 @@ export default function ChatWidget() {
         ...data,
         page: window.location.pathname,
         source: "chatbot",
+        name: clientName,
       }),
     });
 
@@ -209,11 +263,40 @@ export default function ChatWidget() {
     setLoading(false);
   };
 
+  const [isBackToTopVisible, setIsBackToTopVisible] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+
+    const toggle = () => {
+      const currentY = window.scrollY;
+      const isScrollingUp = currentY < lastY;
+      lastY = currentY;
+
+      const scrollPosition = window.innerHeight + currentY;
+      const pageHeight = document.body.offsetHeight;
+
+      // Show if we're past 1.5 screen heights down
+      const isPastHalf = currentY > window.innerHeight * 1.5;
+      const nearFooter = scrollPosition > pageHeight - 200;
+
+      setIsBackToTopVisible(isPastHalf && isScrollingUp && !nearFooter);
+    };
+
+    window.addEventListener("scroll", toggle, { passive: true });
+    return () => window.removeEventListener("scroll", toggle);
+  }, []);
+
+  // Determine if we show a text input (name or contact steps)
+  const showTextInput = step === "name" || step === "contact";
+
   return (
     <>
       {/* FLOATING BUTTON DOCKED NEXT TO BACK-TO-TOP */}
       <div 
-        className="fixed bottom-8 right-24 z-[100] flex items-center group"
+        className={`fixed bottom-8 right-6 z-[100] flex items-center group transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
+        }`}
         onMouseEnter={() => setShowBubble(true)}
         onMouseLeave={() => setShowBubble(false)}
       >
@@ -239,7 +322,9 @@ export default function ChatWidget() {
       </div>
 
       {open && (
-        <div className="fixed bottom-24 right-[100px] z-[100] w-[340px] h-[500px] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/90 backdrop-blur-xl flex flex-col origin-bottom-right transition-all animate-in slide-in-from-bottom-4 fade-in duration-300">
+        <div className={`fixed bottom-24 right-6 z-[100] w-[340px] h-[500px] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-white/90 backdrop-blur-xl flex flex-col origin-bottom-right transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] animate-in slide-in-from-bottom-4 fade-in ${
+          isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
+        }`}>
 
           <div className="flex justify-between items-center px-5 py-4 border-b border-black/10 bg-white/50">
             <p className="text-sm font-semibold tracking-wide">Assistant</p>
@@ -260,9 +345,10 @@ export default function ChatWidget() {
               </div>
             ))}
 
-            {step in options && (
+            {/* Show option pills for steps that have options (not name/contact/done) */}
+            {step in options && step !== "done" && (
               <div className="flex flex-col items-end gap-2 mt-2 pt-2">
-                {options[step as keyof typeof options].map((opt) => (
+                {options[step]?.map((opt) => (
                   <button
                     key={opt}
                     aria-label={`Select ${opt}`}
@@ -280,19 +366,31 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {step === "contact" && (
+          {showTextInput && (
             <div className="p-4 border-t bg-white/50 border-black/10 flex gap-2">
               <input
                 className="flex-1 px-4 py-2.5 rounded-full text-sm bg-white border border-black/10 outline-none focus:border-black transition shadow-sm"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleInputSubmit()}
-                placeholder="Phone or email"
-                aria-label="Enter contact phone or email"
+                placeholder={
+                  step === "name"
+                    ? "Your name"
+                    : contactPreference === "phone"
+                    ? "Phone number"
+                    : "Email address"
+                }
+                aria-label={
+                  step === "name"
+                    ? "Enter your name"
+                    : contactPreference === "phone"
+                    ? "Enter phone number"
+                    : "Enter email address"
+                }
               />
               <button
                 onClick={handleInputSubmit}
-                aria-label="Send contact information"
+                aria-label="Send"
                 className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-medium hover:bg-[#a27725] transition"
               >
                 Send

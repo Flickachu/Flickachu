@@ -99,6 +99,10 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
               Spaces
             </NavLink>
 
+            <NavLink href="/insights" className="hover:opacity-70 transition">
+              Insights
+            </NavLink>
+
             <NavLink href="/contact" className="hover:opacity-70 transition">
               Contact
             </NavLink>
@@ -167,6 +171,10 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
 
           <NavLink href="/spaces" onClick={() => setMenuOpen(false)}>
             Spaces
+          </NavLink>
+
+          <NavLink href="/insights" onClick={() => setMenuOpen(false)}>
+            Insights
           </NavLink>
 
           <NavLink href="/contact" onClick={() => setMenuOpen(false)}>

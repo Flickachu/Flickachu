@@ -45,6 +45,11 @@ export default function Footer() {
                 Projects
               </NavLink>
             </li>
+            <li>
+              <NavLink href="/insights" className="hover:text-white transition">
+                Insights
+              </NavLink>
+            </li>
           </ul>
         </div>
 

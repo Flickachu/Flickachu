@@ -13,10 +13,6 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!body.space || !body.style) {
-      console.warn("⚠️ Incomplete lead (missing core fields)");
-    }
-
     const res = await fetch(process.env.GOOGLE_SCRIPT_URL!, {
       method: "POST",
       headers: {
@@ -33,6 +29,7 @@ export async function POST(req: Request) {
         contact: body.contact || "",
         page: body.page || "",
         source: body.source || "chatbot",
+        name: body.name || "",
       }),
     });
 
