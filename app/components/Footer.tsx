@@ -99,7 +99,7 @@ export default function Footer() {
 
         <p>© 2026 Laminate Gallery. All rights reserved.</p>
 
-        <p className="hidden md:block">Designed & Developed by Laminate Gallery</p>
+        <p className="hidden md:block">Designed & Developed by DesignXninja</p>
 
       </div>
 

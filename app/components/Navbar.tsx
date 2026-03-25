@@ -28,18 +28,18 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
         triggerPoint = offsetTop + height;
       }
 
-// 🚫 Prevent hide on initial load
-if (lastScroll === 0) {
-  setShowNav(true);
-  setLastScroll(currentScroll);
-  return;
-}
+      // 🚫 Prevent hide on initial load
+      if (lastScroll === 0) {
+        setShowNav(true);
+        setLastScroll(currentScroll);
+        return;
+      }
 
-if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
-  setShowNav(false);
-} else {
-  setShowNav(true);
-}
+      if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
+        setShowNav(false);
+      } else {
+        setShowNav(true);
+      }
 
       setLastScroll(currentScroll);
     };
@@ -61,12 +61,12 @@ if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
     <>
       {/* NAVBAR */}
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
+        className={`fixed top-0 left-0 w-full z-50 border-b transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
         ${showNav || menuOpen ? "translate-y-0" : "-translate-y-full"}
         ${
           isScrolled
-            ? "bg-white/70 backdrop-blur-md border-b border-black/10 shadow-sm"
-            : "bg-transparent"
+            ? "bg-white/90 md:backdrop-blur-md border-black/10 shadow-sm"
+            : "bg-transparent border-transparent"
         }`}
       >
         <div
@@ -76,7 +76,7 @@ if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
           {/* LOGO */}
           <NavLink
             href="/"
-            className={`cursive text-3xl md:text-4xl leading-none tracking-wide transition-all duration-300
+            className={`cursive text-3xl md:text-4xl leading-none tracking-wide transition-colors duration-300
             ${isScrolled || forceDark ? "text-black" : "text-white"}`}
           >
             Laminate Gallery
@@ -122,7 +122,7 @@ if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
 
             {/* HAMBURGER */}
             <button
-              className={`md:hidden text-2xl transition ${
+              className={`md:hidden text-2xl transition-colors duration-300 ${
                 isScrolled || forceDark ? "text-black" : "text-white"
               }`}
               onClick={() => setMenuOpen((prev) => !prev)}
@@ -148,9 +148,9 @@ if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
         {/* PANEL */}
         <div
           className={`relative ml-auto w-full max-w-sm h-full 
-          bg-white/10 backdrop-blur-2xl border-l border-white/20
-          shadow-[0_0_40px_rgba(0,0,0,0.25)]
-          text-white flex flex-col items-center justify-center gap-10 text-xl tracking-wide
+          bg-white/90 md:backdrop-blur-2xl border-l border-black/10
+          shadow-[0_0_40px_rgba(0,0,0,0.1)]
+          text-black flex flex-col items-center justify-center gap-10 text-xl tracking-wide
           transform transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
           ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
         >
@@ -176,7 +176,7 @@ if (currentScroll > lastScroll && currentScroll > triggerPoint + 80) {
 
           <NavLink
             href="/get-quote"
-            className="mt-6 px-8 py-3 border border-white/40 rounded-full hover:bg-white hover:text-black transition"
+            className="mt-6 px-8 py-3 border border-black/40 rounded-full hover:bg-black hover:text-white transition"
             onClick={() => setMenuOpen(false)}
           >
             Get Quote

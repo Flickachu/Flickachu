@@ -44,7 +44,7 @@ export default function RootLayout({
       lang="en"
       className={`${jakarta.variable} ${playfair.variable} ${vibes.variable}`}
     >
-      <body className="bg-[#f6f3ee] text-[#1a1a1a] antialiased font-sans">
+      <body className="bg-[#f6f3ee] text-[#1a1a1a] antialiased font-sans selection:bg-[#a27725] selection:text-white">
 
         {/* ✅ NAVBAR ADDED HERE */}
         <Navbar />
