@@ -25,7 +25,7 @@ export default function Footer() {
 
         {/* STUDIO */}
         <div>
-          <p className="text-xs tracking-widest text-gray-500 mb-6 uppercase">
+          <p className="text-xs tracking-widest text-gray-400 mb-6 uppercase">
             Studio
           </p>
 
@@ -50,7 +50,7 @@ export default function Footer() {
 
         {/* CONNECT */}
         <div>
-          <p className="text-xs tracking-widest text-gray-500 mb-6 uppercase">
+          <p className="text-xs tracking-widest text-gray-400 mb-6 uppercase">
             Connect
           </p>
 
@@ -81,7 +81,7 @@ export default function Footer() {
 
         {/* CONTACT */}
         <div>
-          <p className="text-xs tracking-widest text-gray-500 mb-6 uppercase">
+          <p className="text-xs tracking-widest text-gray-400 mb-6 uppercase">
             Contact
           </p>
 

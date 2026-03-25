@@ -120,6 +120,8 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
 
             {/* HAMBURGER */}
             <button
+              aria-label="Toggle Navigation"
+              aria-expanded={menuOpen}
               className={`md:hidden text-2xl transition-colors duration-300 ${isScrolled || forceDark ? "text-black" : "text-white"
                 }`}
               onClick={() => setMenuOpen((prev) => !prev)}
@@ -181,6 +183,7 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
 
           {/* CLOSE */}
           <button
+            aria-label="Close Navigation"
             className="absolute top-8 right-8 text-3xl"
             onClick={() => setMenuOpen(false)}
           >

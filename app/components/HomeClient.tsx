@@ -201,13 +201,15 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                   Thoughtfully designed interiors and bespoke furniture pieces that turn
                   everyday living into a refined, sensory experience.
                 </p>
-                <Link href="/consultation">
-                  <button aria-label="Start Your Project" className="relative mt-12 px-10 py-4 border border-[#c2a373] rounded-full text-[#c2a373] overflow-hidden group transition-all duration-500 hover:text-white">
-                    <span className="relative z-10 tracking-widest text-sm uppercase">
-                      Start Your Project
-                    </span>
-                    <span className="absolute inset-0 bg-[#c2a373] opacity-0 group-hover:opacity-100 transition duration-500 transform scale-x-0 group-hover:scale-x-100 origin-left"></span>
-                  </button>
+                <Link 
+                  href="/consultation"
+                  aria-label="Start Your Project"
+                  className="inline-block relative mt-12 px-10 py-4 border border-[#c2a373] rounded-full text-[#c2a373] overflow-hidden group transition-all duration-500 hover:text-white"
+                >
+                  <span className="relative z-10 tracking-widest text-sm uppercase">
+                    Start Your Project
+                  </span>
+                  <span className="absolute inset-0 bg-[#c2a373] opacity-0 group-hover:opacity-100 transition duration-500 transform scale-x-0 group-hover:scale-x-100 origin-left"></span>
                 </Link>
               </div>
             </FadeUp>
@@ -265,7 +267,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
             <FadeUp key={i}>
               <div className="relative group">
                 <h3 className="text-4xl md:text-6xl font-light text-[#a27725] mb-4 group-hover:scale-105 transition-transform duration-500">{n}</h3>
-                <p className="text-xs md:text-sm tracking-[0.2em] text-[#1a1a1a]/40 uppercase font-light">
+                <p className="text-xs md:text-sm tracking-[0.2em] text-[#1a1a1a]/70 uppercase font-light">
                   {label}
                 </p>
               </div>
@@ -678,7 +680,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
           </div>
 
           <div className="mt-16">
-            <Link href="/get-quote" className="text-sm tracking-widest uppercase text-[#1a1a1a]/50 hover:text-black transition border-b border-transparent hover:border-black pb-1">
+            <Link href="/get-quote" className="text-sm tracking-widest uppercase text-[#1a1a1a]/70 hover:text-black transition border-b border-transparent hover:border-black pb-1">
               or fill out a detailed project quote
             </Link>
           </div>
