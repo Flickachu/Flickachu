@@ -17,7 +17,7 @@ export default function SmoothScrollProvider({
       document.body.style.background = "#0d0e12"; // matches Sanity dark theme
       document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
-      // @ts-ignore - resolve scrollbar gutter issues
+
       document.documentElement.style.scrollbarGutter = "auto";
       document.body.style.paddingRight = "0px";
       return;
@@ -27,7 +27,7 @@ export default function SmoothScrollProvider({
     document.body.style.background = "";
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
-    // @ts-ignore
+
     document.documentElement.style.scrollbarGutter = "";
     document.body.style.paddingRight = "";
 

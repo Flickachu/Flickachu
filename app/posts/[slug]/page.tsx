@@ -15,7 +15,7 @@ export async function generateStaticParams() {
     `*[_type == "post" && defined(slug.current)] { "slug": slug.current }`
   );
   
-  return posts.map((p: any) => ({
+  return posts.map((p: { slug: string }) => ({
     slug: p.slug,
   }));
 }

@@ -153,7 +153,7 @@ export async function generateStaticParams() {
     `*[_type == "project" && defined(slug.current)] { "slug": slug.current }`
   );
   
-  return projects.map((p: any) => ({
+  return projects.map((p: { slug: string }) => ({
     slug: p.slug,
   }));
 }
