@@ -1,4 +1,6 @@
 import "./globals.css";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 import {
   Plus_Jakarta_Sans,
   Playfair_Display,
@@ -8,6 +10,8 @@ import ChatWidget from "./components/ChatWidget";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
+import Navbar from "./components/Navbar";
+import { SanityLive } from "@/sanity/lib/live";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -28,9 +32,9 @@ const vibes = Great_Vibes({
   display: "swap",
 });
 
-export const metadata = {
-  title: "Flickachu",
-  description: "Luxury interiors & furniture studio",
+export const metadata: Metadata = {
+  title: "Laminate Gallery",
+  description: "Luxury interiors and bespoke furniture studio.",
 };
 
 export default function RootLayout({
@@ -45,12 +49,16 @@ export default function RootLayout({
     >
       <body className="bg-[#f6f3ee] text-[#1a1a1a] antialiased font-sans selection:bg-[#a27725] selection:text-white">
 
-        <SmoothScrollProvider>
-          {children}
-          <Footer />
-          <BackToTop />
-          <ChatWidget />
-        </SmoothScrollProvider>
+        <Suspense fallback={null}>
+          <SmoothScrollProvider>
+            <Navbar />
+            {children}
+            <Footer />
+            <BackToTop />
+            <ChatWidget />
+            <SanityLive />
+          </SmoothScrollProvider>
+        </Suspense>
 
       </body>
     </html>

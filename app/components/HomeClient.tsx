@@ -2,22 +2,47 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import Navbar from "./Navbar";
 import FadeUp from "./FadeUp";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import SectionNav from "./SectionNav";
+import { urlFor } from "@/sanity/lib/image";
+import { SanityProject } from "@/sanity/lib/types";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function HomeClient({ posts }: { posts: any[] }) {
+type HomePost = {
+  slug: string;
+  title: string;
+  excerpt: string;
+};
+
+type FeaturedProject = {
+  slug: string;
+  title: string;
+  description: string;
+  hero?: SanityProject["hero"];
+};
+
+interface HomeClientProps {
+  posts: HomePost[];
+  featuredProject?: FeaturedProject;
+}
+
+export default function HomeClient({ posts, featuredProject }: HomeClientProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const featuredTitle = featuredProject?.title || "Modern Elegance";
+  const [featuredLeadWord, ...featuredTailWords] = featuredTitle.split(" ");
+  const featuredTail = featuredTailWords.join(" ") || "Elegance";
+  const featuredHref = featuredProject
+    ? `/projects/${featuredProject.slug}`
+    : "/projects";
 
   const [quickEmail, setQuickEmail] = useState("");
   const [quickStatus, setQuickStatus] = useState<"idle" | "loading" | "success">("idle");
@@ -72,7 +97,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
       });
 
       // PROJECT IMAGES
-      gsap.utils.toArray(".project-img").forEach((img: any) => {
+      gsap.utils.toArray<HTMLElement>(".project-img").forEach((img) => {
         gsap.fromTo(
           img,
           { scale: 1.1 },
@@ -109,7 +134,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
       }
 
       // MATERIAL IMAGES
-      gsap.utils.toArray(".material-img").forEach((img: any) => {
+      gsap.utils.toArray<HTMLElement>(".material-img").forEach((img) => {
         gsap.fromTo(
           img,
           { scale: 1.05 },
@@ -127,7 +152,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
       });
 
       // STACKING CARDS
-      gsap.utils.toArray(".stack-card").forEach((card: any, i: number, arr: any[]) => {
+      gsap.utils.toArray<HTMLElement>(".stack-card").forEach((card, i, arr) => {
         // Pin the card
         ScrollTrigger.create({
           trigger: card,
@@ -163,7 +188,6 @@ export default function HomeClient({ posts }: { posts: any[] }) {
       {isDesktop && <SectionNav />}
 
       <main className="bg-[#f6f3ee] text-[#1a1a1a] selection:bg-[#a27725] selection:text-white">
-        <Navbar />
 
         {/* HERO */}
         <section id="hero" className="relative md:min-h-screen min-h-[85vh] flex items-center overflow-hidden">
@@ -250,7 +274,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
             </p>
             <p className="text-[#1a1a1a]/70 text-lg leading-relaxed font-light">
               Today, it stands as a studio dedicated to crafting interiors that balance
-              modern aesthetics with timeless sensibilities — spaces that don't just look
+              modern aesthetics with timeless sensibilities — spaces that don&apos;t just look
               beautiful, but feel complete.
             </p>
           </div>
@@ -324,27 +348,42 @@ export default function HomeClient({ posts }: { posts: any[] }) {
         <section className="py-16 md:py-40 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 px-6 md:px-10 max-w-[1400px] mx-auto items-center">
           <div className="relative overflow-hidden rounded-2xl group">
             <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-all duration-700 z-10"></div>
-            <Image
-              src="/images/featured.jpg"
-              alt="Featured project"
-              width={800}
-              height={800}
-              className="project-img w-full h-[400px] md:h-[700px] object-cover transition-transform duration-[20s] group-hover:scale-105"
-            />
+            {featuredProject?.hero ? (
+              <Image
+                src={urlFor(featuredProject.hero).width(1200).height(1200).url()}
+                alt={featuredTitle}
+                width={1200}
+                height={1200}
+                className="project-img w-full h-[400px] md:h-[700px] object-cover transition-transform duration-[20s] group-hover:scale-105"
+              />
+            ) : (
+              <Image
+                src="/images/featured.jpg"
+                alt="Featured project"
+                width={800}
+                height={800}
+                className="project-img w-full h-[400px] md:h-[700px] object-cover transition-transform duration-[20s] group-hover:scale-105"
+              />
+            )}
           </div>
           <div>
             <p className="text-xs tracking-[0.2em] text-[#a27725] mb-6 uppercase">
               Featured Project
             </p>
-            <h2 className="text-4xl md:text-6xl font-light mb-8">Modern <span className="italic serif text-[#a27725]">Elegance</span></h2>
-            <p className="text-[#1a1a1a]/70 mt-6 text-lg font-light leading-relaxed">
+            <h2 className="text-4xl md:text-6xl font-light mb-8">
+              {featuredLeadWord} <span className="italic serif text-[#a27725]">{featuredTail}</span>
+            </h2>
+            {featuredProject?.description ? (
+              <p className="text-[#1a1a1a]/70 mt-6 text-lg font-light leading-relaxed">
+                {featuredProject.description}
+              </p>
+            ) : (
+              <p className="text-[#1a1a1a]/70 mt-6 text-lg font-light leading-relaxed">
               This project explores contrast — warm wood textures paired with sculptural
               lighting and soft neutral fabrics.
-            </p>
-            <p className="text-[#1a1a1a]/70 mt-6 text-lg font-light leading-relaxed">
-              The result is a space that feels grounded, intimate, and quietly luxurious.
-            </p>
-            <Link href="/projects/modern-elegance" className="inline-block mt-12 px-8 py-3 border border-black/20 rounded-full text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-colors duration-500">
+              </p>
+            )}
+            <Link href={featuredHref} className="inline-block mt-12 px-8 py-3 border border-black/20 rounded-full text-sm tracking-widest uppercase hover:bg-black hover:text-white transition-colors duration-500">
               View Project
             </Link>
           </div>
@@ -582,11 +621,14 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                     "https://placehold.co/300x120/transparent/1a1a1a/?text=GQ&font=playfair-display",
                     "https://placehold.co/400x120/transparent/1a1a1a/?text=HARPER'S+BAZAAR&font=playfair-display"
                   ].map((src, i) => (
-                    <img
+                    <Image
                       key={i}
                       src={src}
                       alt={`Partner Logo ${i}`}
-                      className="h-8 md:h-12 opacity-40 hover:opacity-100 transition duration-500 object-contain min-w-[120px] max-w-[240px]"
+                      width={300}
+                      height={120}
+                      unoptimized
+                      className="h-8 md:h-12 w-auto opacity-40 hover:opacity-100 transition duration-500 object-contain min-w-[120px] max-w-[240px]"
                     />
                   ))}
                 </div>
@@ -606,10 +648,9 @@ export default function HomeClient({ posts }: { posts: any[] }) {
                 <Link href={`/posts/${post.slug}`} className="group cursor-pointer block">
                   <p className="text-xs text-[#a27725] mb-4 uppercase tracking-[0.2em]">Insight / Insight</p>
                   <h3 className="text-2xl mb-6 font-light group-hover:text-[#a27725] transition-colors">{post.title}</h3>
-                  <div
-                    className="text-[#1a1a1a]/60 font-light leading-relaxed text-lg line-clamp-3"
-                    dangerouslySetInnerHTML={{ __html: post.excerpt }}
-                  />
+                  <p className="text-[#1a1a1a]/60 font-light leading-relaxed text-lg line-clamp-3">
+                    {post.excerpt}
+                  </p>
                   <div className="mt-8 uppercase text-xs tracking-widest border-b border-black/20 pb-2 inline-block group-hover:border-[#a27725] transition-colors">Read More</div>
                 </Link>
               </FadeUp>
@@ -624,18 +665,18 @@ export default function HomeClient({ posts }: { posts: any[] }) {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-[1200px] mx-auto">
             <div className="bg-[#fcfbf9] border border-black/5 p-12 md:p-16 rounded-3xl text-left relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 text-8xl text-black/5 font-serif leading-none rotate-180">"</div>
+              <div className="absolute top-0 right-0 p-8 text-8xl text-black/5 font-serif leading-none rotate-180">&quot;</div>
               <p className="text-xl md:text-2xl font-light leading-relaxed text-[#1a1a1a]/90 relative z-10">
-                "The team transformed our space into something beyond what we imagined.
-                Every detail feels intentional and refined."
+                &quot;The team transformed our space into something beyond what we imagined.
+                Every detail feels intentional and refined.&quot;
               </p>
               <p className="mt-10 text-sm tracking-widest text-[#a27725] uppercase">Ananya Sharma</p>
             </div>
             <div className="bg-[#fcfbf9] border border-black/5 p-12 md:p-16 rounded-3xl text-left relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 text-8xl text-black/5 font-serif leading-none rotate-180">"</div>
+              <div className="absolute top-0 right-0 p-8 text-8xl text-black/5 font-serif leading-none rotate-180">&quot;</div>
               <p className="text-xl md:text-2xl font-light leading-relaxed text-[#1a1a1a]/90 relative z-10">
-                "Working with Laminate Gallery was effortless. Their understanding of materials
-                and lighting is exceptional."
+                &quot;Working with Laminate Gallery was effortless. Their understanding of materials
+                and lighting is exceptional.&quot;
               </p>
               <p className="mt-10 text-sm tracking-widest text-[#a27725] uppercase">Rahul Mehta</p>
             </div>
@@ -646,10 +687,10 @@ export default function HomeClient({ posts }: { posts: any[] }) {
         <section id="contact" className="py-32 md:py-48 relative overflow-hidden text-center px-6 md:px-10">
           <div className="absolute inset-0 bg-white -z-10" />
           <h2 className="text-5xl md:text-8xl mb-10 font-light text-[#1a1a1a] tracking-tight">
-            Let's Create Something<br className="hidden md:block" /> <span className="italic serif text-[#a27725]">Exceptional</span>
+            Let&apos;s Create Something<br className="hidden md:block" /> <span className="italic serif text-[#a27725]">Exceptional</span>
           </h2>
           <p className="text-[#1a1a1a]/70 max-w-2xl mx-auto mb-16 text-xl font-light leading-relaxed">
-            Whether you're designing a new space or redefining an existing one, we bring
+            Whether you&apos;re designing a new space or redefining an existing one, we bring
             clarity, craftsmanship, and character to every project.
           </p>
 
@@ -674,7 +715,7 @@ export default function HomeClient({ posts }: { posts: any[] }) {
             </form>
             {quickStatus === "success" && (
               <p className="text-sm text-green-700 mt-4 tracking-wide absolute w-full text-center">
-                We'll be in touch shortly.
+                We&apos;ll be in touch shortly.
               </p>
             )}
           </div>

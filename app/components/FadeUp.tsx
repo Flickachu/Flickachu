@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function FadeUp({ children, delay = 0 }: any) {
+export default function FadeUp({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

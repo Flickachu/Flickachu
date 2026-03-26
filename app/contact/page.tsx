@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
 import Image from "next/image";
 
@@ -53,8 +52,6 @@ export default function ContactPage() {
 
   return (
     <main className="bg-[#f6f3ee] text-[#1a1a1a]">
-      <Navbar />
-
       {/* HERO */}
       <section className="relative h-screen flex items-center overflow-hidden">
         <Image
@@ -69,11 +66,11 @@ export default function ContactPage() {
         <div className="relative z-10 max-w-[1400px] mx-auto px-10 text-white">
           <FadeUp>
             <h1 className="text-7xl md:text-[90px] max-w-4xl">
-              Let's <span className="italic serif">Talk</span>
+              Let&apos;s <span className="italic serif">Talk</span>
             </h1>
             <p className="mt-6 text-white/70 max-w-xl">
-              Whether you're starting a new project or refining an existing space,
-              we'd love to hear from you.
+              Whether you&apos;re starting a new project or refining an existing space,
+              we&apos;d love to hear from you.
             </p>
           </FadeUp>
         </div>
@@ -88,7 +85,7 @@ export default function ContactPage() {
               Get in <span className="italic serif">Touch</span>
             </h2>
             <p className="text-gray-600 mb-8 max-w-md">
-              Reach out to discuss your vision. We'll guide you through the process
+              Reach out to discuss your vision. We&apos;ll guide you through the process
               and help shape your ideas into a refined space.
             </p>
             <div className="space-y-4 text-sm text-gray-700">
@@ -183,7 +180,7 @@ export default function ContactPage() {
 
             {status === "success" && (
               <p className="text-sm text-green-700 mt-4 tracking-wide">
-                Thank you. We'll be in touch shortly.
+                Thank you. We&apos;ll be in touch shortly.
               </p>
             )}
           </form>

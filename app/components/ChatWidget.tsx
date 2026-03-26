@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { MessageSquare, X } from "lucide-react";
 
 type Message = {
@@ -31,10 +32,12 @@ type Step =
   | "done";
 
 export default function ChatWidget() {
+  const pathname = usePathname();
   const [messages, setMessages] = useState<Message[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
+  const [isNearFooter, setIsNearFooter] = useState(false);
 
   useEffect(() => {
     // Initial gentle pop after 5 seconds
@@ -98,19 +101,6 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    if (!open) return;
-
-    if (messages.length === 0) {
-      setMessages([
-        {
-          role: "assistant",
-          content:
-            "I'll help you shape this properly. What space are you designing?",
-        },
-      ]);
-    }
-  }, [open, messages.length]);
 
   const getBotReply = (nextStep: Step, value: string) => {
     switch (nextStep) {
@@ -277,12 +267,16 @@ export default function ChatWidget() {
       const isPastHalf = currentY > window.innerHeight * 1.5;
       const nearFooter = scrollPosition > pageHeight - 200;
 
+      setIsNearFooter(nearFooter);
       setIsBackToTopVisible(isPastHalf && isScrollingUp && !nearFooter);
     };
 
+    toggle();
     window.addEventListener("scroll", toggle, { passive: true });
     return () => window.removeEventListener("scroll", toggle);
   }, []);
+
+  if (pathname.startsWith("/studio") || pathname.startsWith("/sanity")) return null;
 
   const showTextInput = step === "name" || step === "contact";
 
@@ -290,22 +284,35 @@ export default function ChatWidget() {
     <>
       {/* FLOATING BUTTON DOCKED NEXT TO BACK-TO-TOP */}
       <div
-        className={`fixed bottom-8 right-6 z-[100] flex items-center group transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
-          }`}
+        className={`fixed bottom-8 right-6 z-[100] flex items-center group transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isBackToTopVisible ? "-translate-x-16" : "translate-x-0"
+        } ${isNearFooter && !open ? "opacity-0 translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"}`}
         onMouseEnter={() => setShowBubble(true)}
         onMouseLeave={() => setShowBubble(false)}
       >
-        {!open && (
+        {!open && !isNearFooter && (
           <div
-            className={`absolute right-full mr-4 bg-white/90 backdrop-blur-md border border-black/10 text-black text-xs font-medium tracking-wide px-4 py-2 rounded-2xl rounded-br-sm shadow-[0_4px_20px_rgba(0,0,0,0.08)] whitespace-nowrap transition-all duration-700 pointer-events-none ${showBubble ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"
-              }`}
+            className={`absolute right-full mr-4 bg-white/90 backdrop-blur-md border border-black/10 text-black text-xs font-medium tracking-wide px-4 py-2 rounded-2xl rounded-br-sm shadow-[0_4px_20px_rgba(0,0,0,0.08)] whitespace-nowrap transition-all duration-700 pointer-events-none ${
+              showBubble ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"
+            }`}
           >
             Get a quick quote
           </div>
         )}
 
         <button
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            const nextOpen = !open;
+            setOpen(nextOpen);
+            if (nextOpen && messages.length === 0) {
+              setMessages([
+                {
+                  role: "assistant",
+                  content: "I'll help you shape this properly. What space are you designing?",
+                },
+              ]);
+            }
+          }}
           aria-expanded={open}
           aria-label={open ? "Close Chat Assistant" : "Open Chat Assistant"}
           className="w-12 h-12 rounded-full backdrop-blur-md bg-white/50 border border-black/10 shadow-sm flex items-center justify-center hover:bg-white/90 hover:scale-105 transition-all duration-300 relative"

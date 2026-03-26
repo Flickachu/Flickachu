@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
 import Image from "next/image";
 
@@ -57,8 +56,6 @@ export default function QuotePage() {
 
   return (
     <main className="bg-[#f6f3ee] text-[#1a1a1a]">
-      <Navbar />
-
       {/* HERO */}
       <section className="relative h-screen flex items-center overflow-hidden">
         <Image
@@ -77,7 +74,7 @@ export default function QuotePage() {
             </h1>
             <p className="mt-6 text-white/70 max-w-xl">
               Tell us about your space, your vision, and your requirements.
-              We'll craft a tailored solution for you.
+              We&apos;ll craft a tailored solution for you.
             </p>
           </FadeUp>
         </div>
@@ -198,7 +195,7 @@ export default function QuotePage() {
 
             {status === "success" && (
               <p className="text-sm text-green-700 mt-4 tracking-wide">
-                Thanks! We've received your request and will contact you soon.
+                Thanks! We&apos;ve received your request and will contact you soon.
               </p>
             )}
           </form>

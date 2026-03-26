@@ -1,31 +1,17 @@
-"use client";
-
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "../components/Navbar";
+import { sanityFetch } from "@/sanity/lib/live";
+import { PROJECTS_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
+import { SanityProject } from "@/sanity/lib/types";
 import FadeUp from "../components/FadeUp";
 
-const dummyCaseStudies = [
-  { slug: "sculpted-minimalism", title: "Sculpted Minimalism", desc: "A refined living space defined by clean lines, soft lighting, and carefully selected materials.", category: "Residential", img: "featured.jpg" },
-  { slug: "urban-oasis", title: "Urban Oasis", desc: "A calm sanctuary in the heart of Mumbai, focusing on indoor-outdoor flow.", category: "Villa", img: "project1.jpg" },
-  { slug: "modern-heritage", title: "Modern Heritage", desc: "Merging traditional Indian craftsmanship with contemporary architectural principles.", category: "Penthouse", img: "project2.jpg" },
-  { slug: "the-monochrome-loft", title: "The Monochrome Loft", desc: "Using varying shades of black, white, and grey to define volumes in an open plan.", category: "Apartment", img: "project3.jpg" }
-];
-
-export default function CaseStudiesPage() {
-  const pathname = usePathname();
-
-  useEffect(() => {
-    document.documentElement.classList.remove("is-transitioning");
-  }, [pathname]);
+export default async function CaseStudiesPage() {
+  const { data: projects } = await sanityFetch({ query: PROJECTS_QUERY });
+  const caseStudies = projects as SanityProject[];
 
   return (
     <main className="bg-black text-white min-h-screen">
-      <Navbar forceDark={false} />
-
-      {/* HEADER */}
       <section className="pt-48 pb-24 px-6 md:px-10 max-w-[1400px] mx-auto border-b border-white/10">
         <FadeUp>
           <div className="max-w-4xl">
@@ -33,42 +19,66 @@ export default function CaseStudiesPage() {
               Selected <span className="italic serif text-[#c2a373]">Case Studies</span>
             </h1>
             <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed max-w-2xl">
-              An in-depth look into our architectural process—how we deconstruct space, light, and material to build environments that resonate emotionally.
+              Published project stories from Sanity, focused on space, material, and the lived experience of each interior.
             </p>
           </div>
         </FadeUp>
       </section>
 
-      {/* LIST */}
       <section className="py-24 px-6 md:px-10 max-w-[1400px] mx-auto space-y-32">
-        {dummyCaseStudies.map((study, i) => (
-          <FadeUp key={study.slug}>
-            <Link href={`/projects/${study.slug}`} className="group block">
+        {caseStudies.map((study, index) => (
+          <FadeUp key={study._id}>
+            <Link href={`/projects/${study.slug.current}`} className="group block">
               <div className="grid md:grid-cols-2 gap-12 md:gap-24 items-center">
-                <div className={`order-2 ${i % 2 === 0 ? "md:order-1" : "md:order-2"}`}>
-                  <p className="text-xs uppercase tracking-[0.3em] text-[#c2a373] mb-6">{study.category}</p>
-                  <h2 className="text-4xl md:text-5xl font-light leading-tight mb-8 group-hover:text-[#c2a373] transition-colors">{study.title}</h2>
+                <div className={`order-2 ${index % 2 === 0 ? "md:order-1" : "md:order-2"}`}>
+                  <p className="text-xs uppercase tracking-[0.3em] text-[#c2a373] mb-6">
+                    {study.category}
+                    {study.location ? ` / ${study.location}` : ""}
+                  </p>
+                  <h2 className="text-4xl md:text-5xl font-light leading-tight mb-8 group-hover:text-[#c2a373] transition-colors">
+                    {study.title}
+                  </h2>
                   <p className="text-white/60 font-light text-lg leading-relaxed max-w-md mb-10">
-                    {study.desc}
+                    {study.description || "A detailed look at how the space was shaped from brief to finished experience."}
                   </p>
                   <div className="inline-flex items-center gap-4 text-sm uppercase tracking-widest border-b border-white/20 pb-2 group-hover:border-white transition-colors">
-                    View Complete Case Study <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
+                    View Complete Case Study <span className="text-lg group-hover:translate-x-2 transition-transform duration-300">-&gt;</span>
                   </div>
                 </div>
 
-                <div className={`overflow-hidden rounded-2xl order-1 ${i % 2 === 0 ? "md:order-2" : "md:order-1"}`}>
-                  <Image
-                    src={`/images/${study.img}`}
-                    alt={study.title}
-                    width={1000}
-                    height={800}
-                    className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-[15s] group-hover:scale-105"
-                  />
+                <div className={`overflow-hidden rounded-2xl order-1 ${index % 2 === 0 ? "md:order-2" : "md:order-1"}`}>
+                  {study.hero ? (
+                    <Image
+                      src={urlFor(study.hero).width(1200).height(900).url()}
+                      alt={study.title}
+                      width={1200}
+                      height={900}
+                      className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-[15s] group-hover:scale-105"
+                    />
+                  ) : (
+                    <Image
+                      src="/images/featured.jpg"
+                      alt={study.title}
+                      width={1000}
+                      height={800}
+                      className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-[15s] group-hover:scale-105"
+                    />
+                  )}
                 </div>
               </div>
             </Link>
           </FadeUp>
         ))}
+
+        {caseStudies.length === 0 && (
+          <FadeUp>
+            <div className="rounded-3xl border border-white/10 bg-white/5 px-8 py-16 text-center">
+              <p className="text-white/60 text-lg">
+                Publish project entries in Sanity to populate this section.
+              </p>
+            </div>
+          </FadeUp>
+        )}
       </section>
     </main>
   );

@@ -4,53 +4,56 @@ import { Suspense } from "react";
 // Required for Next.js 16 instant client-side navigations (commented out to avoid Windows Turbopack panic)
 // export const unstable_instant = { prefetch: 'static' };
 
-async function getPosts() {
-  try {
-    const res = await fetch("http://flickachu.local/graphql", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-      body: JSON.stringify({
-        query: `
-          query GetLatestPosts {
-            posts(first: 3) {
-              edges {
-                node {
-                  title
-                  slug
-                  excerpt
-                }
-              }
-            }
-          }
-        `,
-      }),
-    });
+import { sanityFetch } from "@/sanity/lib/live";
+import { POSTS_QUERY, PROJECTS_QUERY } from "@/sanity/lib/queries";
+import { SanityPost, SanityProject } from "@/sanity/lib/types";
 
-    const json = await res.json();
-    if (json.errors) return [];
+type HomePost = {
+  title: string;
+  slug: string;
+  excerpt: string;
+};
 
-    return json.data?.posts?.edges.map(({ node }: any) => ({
-      title: node.title,
-      slug: node.slug,
-      excerpt: node.excerpt || "",
-    })) || [
-      { title: "Sculpted Minimalism", slug: "sculpted-minimalism", excerpt: "A refined living space defined by clean lines, soft lighting, and carefully selected materials." },
-      { title: "The Art of Material Harmony", slug: "material-harmony", excerpt: "Exploring how textures, tones, and finishes come together to create balanced interiors." },
-      { title: "Timeless vs Trend-Driven Spaces", slug: "timeless-design", excerpt: "Understanding the balance between contemporary trends and enduring design principles." }
-    ];
-  } catch (error) {
-    return [
-      { title: "Sculpted Minimalism", slug: "sculpted-minimalism", excerpt: "A refined living space defined by clean lines, soft lighting, and carefully selected materials." },
-      { title: "The Art of Material Harmony", slug: "material-harmony", excerpt: "Exploring how textures, tones, and finishes come together to create balanced interiors." },
-      { title: "Timeless vs Trend-Driven Spaces", slug: "timeless-design", excerpt: "Understanding the balance between contemporary trends and enduring design principles." }
-    ];
-  }
+type FeaturedProject = {
+  title: string;
+  slug: string;
+  description: string;
+  hero?: SanityProject["hero"];
+};
+
+async function getHomeData(): Promise<{
+  posts: HomePost[];
+  featuredProject?: FeaturedProject;
+}> {
+  const [{ data: posts }, { data: projects }] = await Promise.all([
+    sanityFetch({ query: POSTS_QUERY }),
+    sanityFetch({ query: PROJECTS_QUERY }),
+  ]);
+
+  const homePosts = (posts as SanityPost[]).slice(0, 3).map((post) => ({
+    title: post.title,
+    slug: post.slug.current,
+    excerpt: post.excerpt || "",
+  }));
+
+  const featured = (projects as SanityProject[])[0];
+
+  return {
+    posts: homePosts,
+    featuredProject: featured
+      ? {
+          title: featured.title,
+          slug: featured.slug.current,
+          description: featured.description || "",
+          hero: featured.hero,
+        }
+      : undefined,
+  };
 }
 
 async function HomeDataFetcher() {
-  const posts = await getPosts();
-  return <HomeClient posts={posts} />;
+  const { posts, featuredProject } = await getHomeData();
+  return <HomeClient posts={posts} featuredProject={featuredProject} />;
 }
 
 export default function Home() {

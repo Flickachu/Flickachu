@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
 
 export default function PropertyPage() {
@@ -47,9 +46,6 @@ export default function PropertyPage() {
   }, []);
   return (
     <main className="min-h-screen bg-[#f8f8f8] text-black">
-
-      <Navbar forceDark />
-
       {/* HERO */}
       <section className="pt-36 pb-24 px-6 md:px-12 max-w-[1400px] mx-auto border-b border-black/5">
         <div className="max-w-2xl">

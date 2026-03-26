@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
 import Image from "next/image";
 
@@ -15,8 +14,6 @@ export default function AboutPage() {
 
   return (
     <main className="bg-[#f6f3ee] text-[#1a1a1a]">
-      <Navbar />
-
       {/* HERO */}
       <section className="relative h-screen flex items-center overflow-hidden">
         <Image
@@ -133,7 +130,7 @@ export default function AboutPage() {
             Ready to <span className="italic serif">Elevate</span> your space?
           </h2>
           <p className="text-white/70 max-w-xl mx-auto mb-10 text-lg">
-            Let's discuss how our design philosophy can bring your vision into reality.
+            Let&apos;s discuss how our design philosophy can bring your vision into reality.
           </p>
           <a href="/contact" className="px-10 py-5 bg-white text-black rounded-full hover:bg-[#a27725] hover:text-white transition duration-300">
             Get in Touch

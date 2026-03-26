@@ -20,20 +20,41 @@ const sections = [
 ];
 
 export default function SectionNav() {
-  const [active, setActive] = useState("about");
+  const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
+    const visibleIds = new Set<string>();
 
-    sections.forEach((section) => {
+    const syncActiveSection = () => {
+      if (visibleIds.has("hero")) {
+        setActive(null);
+        return;
+      }
+
+      const nextActive =
+        [...sections]
+          .reverse()
+          .find((section) => visibleIds.has(section.id))?.id ?? null;
+
+      setActive(nextActive);
+    };
+
+    [{ id: "hero" }, ...sections].forEach((section) => {
       const el = document.getElementById(section.id);
       if (!el) return;
 
       const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActive(section.id);
-          }
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              visibleIds.add(section.id);
+            } else {
+              visibleIds.delete(section.id);
+            }
+          });
+
+          syncActiveSection();
         },
         { rootMargin: "-40% 0px -40% 0px" } // Triggers when section crosses the middle of the viewport
       );

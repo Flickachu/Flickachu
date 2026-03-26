@@ -1,8 +1,12 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import NavLink from "./NavLink";
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/studio") || pathname.startsWith("/sanity")) return null;
+
   return (
     <footer className="bg-[#0f0f0f] text-white pt-28 pb-10 px-10">
 

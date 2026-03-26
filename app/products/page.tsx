@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Navbar from "../components/Navbar";
 import FadeUp from "../components/FadeUp";
-import Image from "next/image"; // ✅ ADDED
+import Image from "next/image";
 
 export default function ProductsPage() {
   const pathname = usePathname();
@@ -15,9 +15,6 @@ export default function ProductsPage() {
 
   return (
     <main className="bg-[#f6f3ee] text-[#1a1a1a]">
-
-      <Navbar />
-
       {/* HERO */}
       <section className="relative h-screen flex items-center overflow-hidden">
 
@@ -89,9 +86,12 @@ export default function ProductsPage() {
             Every product is tailored to fit your space, lifestyle, and vision.
           </p>
 
-          <button className="px-8 py-4 bg-white text-black rounded-full">
+          <Link
+            href="/get-quote"
+            className="inline-block px-8 py-4 bg-white text-black rounded-full hover:bg-[#a27725] hover:text-white transition duration-300"
+          >
             Enquire Now
-          </button>
+          </Link>
         </FadeUp>
       </section>
 
