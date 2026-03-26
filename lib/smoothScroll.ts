@@ -4,11 +4,15 @@ import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 let lenisInstance: Lenis | null = null;
+let pluginRegistered = false;
 
 export function initSmoothScroll(): () => void {
+  if (!pluginRegistered) {
+    gsap.registerPlugin(ScrollTrigger);
+    pluginRegistered = true;
+  }
+
   // 🔴 HARD BLOCK — MOBILE NEVER ALLOWED
   const isMobile = window.matchMedia("(max-width: 768px)").matches;
 

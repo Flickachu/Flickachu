@@ -4,11 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { initSmoothScroll } from "@/lib/smoothScroll";
 
-export default function SmoothScrollProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SmoothScrollProvider() {
   const pathname = usePathname();
 
   useEffect(() => {
@@ -47,5 +43,5 @@ export default function SmoothScrollProvider({
     };
   }, [pathname]);
 
-  return <>{children}</>;
+  return null;
 }

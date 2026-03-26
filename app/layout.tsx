@@ -37,6 +37,19 @@ export const metadata: Metadata = {
   description: "Luxury interiors and bespoke furniture studio.",
 };
 
+import { SETTINGS_QUERY } from "@/sanity/lib/queries";
+import { sanityFetch } from "@/sanity/lib/live";
+
+async function GlobalHeader() {
+  const { data: settings } = await sanityFetch({ query: SETTINGS_QUERY });
+  return <Navbar settings={settings} />;
+}
+
+async function GlobalFooter() {
+  const { data: settings } = await sanityFetch({ query: SETTINGS_QUERY });
+  return <Footer settings={settings} />;
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -50,14 +63,29 @@ export default function RootLayout({
       <body className="bg-[#f6f3ee] text-[#1a1a1a] antialiased font-sans selection:bg-[#a27725] selection:text-white">
 
         <Suspense fallback={null}>
-          <SmoothScrollProvider>
-            <Navbar />
-            {children}
-            <Footer />
-            <BackToTop />
-            <ChatWidget />
-            <SanityLive />
-          </SmoothScrollProvider>
+          <SmoothScrollProvider />
+        </Suspense>
+        
+        <Suspense fallback={null}>
+          <GlobalHeader />
+        </Suspense>
+        
+        {children}
+        
+        <Suspense fallback={null}>
+          <GlobalFooter />
+        </Suspense>
+        
+        <Suspense fallback={null}>
+          <BackToTop />
+        </Suspense>
+        
+        <Suspense fallback={null}>
+          <ChatWidget />
+        </Suspense>
+        
+        <Suspense fallback={null}>
+          <SanityLive />
         </Suspense>
 
       </body>

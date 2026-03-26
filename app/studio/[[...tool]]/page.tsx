@@ -11,8 +11,14 @@ import { NextStudio } from 'next-sanity/studio'
 import config from '../../../sanity.config'
 
 
+import { Suspense } from 'react'
+
 export { metadata, viewport } from 'next-sanity/studio'
 
 export default function StudioPage() {
-  return <NextStudio config={config} />
+  return (
+    <Suspense fallback={<div>Loading Studio...</div>}>
+      <NextStudio config={config} />
+    </Suspense>
+  )
 }

@@ -11,7 +11,7 @@ const FORCE_DARK_PATHS = new Set([
   "/spaces",
 ]);
 
-export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
+export default function Navbar({ forceDark = false, settings }: { forceDark?: boolean, settings?: any }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNav, setShowNav] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -87,40 +87,34 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
             className={`cursive text-3xl md:text-4xl leading-none tracking-wide transition-colors duration-300
             ${isScrolled || shouldForceDark ? "text-black" : "text-white"}`}
           >
-            Laminate Gallery
+            {settings?.brandName || "Laminate Gallery"}
           </NavLink>
 
           <nav className="hidden md:flex gap-10 text-sm tracking-wide">
-            <NavLink href="/about" className="hover:opacity-70 transition">
-              About
-            </NavLink>
-            <NavLink href="/products" className="hover:opacity-70 transition">
-              Products
-            </NavLink>
-            <NavLink href="/projects" className="hover:opacity-70 transition">
-              Projects
-            </NavLink>
-            <NavLink href="/spaces" className="hover:opacity-70 transition">
-              Spaces
-            </NavLink>
-            <NavLink href="/insights" className="hover:opacity-70 transition">
-              Insights
-            </NavLink>
-            <NavLink href="/contact" className="hover:opacity-70 transition">
-              Contact
-            </NavLink>
+            {(settings?.mainNav || [
+              { label: "About", link: "/about" },
+              { label: "Products", link: "/products" },
+              { label: "Projects", link: "/projects" },
+              { label: "Spaces", link: "/spaces" },
+              { label: "Insights", link: "/insights" },
+              { label: "Contact", link: "/contact" }
+            ]).map((nav: { label: string; link: string }, i: number) => (
+              <NavLink key={i} href={nav.link || "#"} className="hover:opacity-70 transition">
+                {nav.label}
+              </NavLink>
+            ))}
           </nav>
 
           <div className="flex items-center gap-4">
             <NavLink
-              href="/get-quote"
+              href={settings?.ctaButton?.link || "/get-quote"}
               className={`hidden md:block px-6 py-2 rounded-full text-xs tracking-wide border transition-all duration-300
               ${isScrolled || shouldForceDark
                   ? "border-black hover:bg-black hover:text-white"
                   : "border-white hover:bg-white hover:text-black"
                 }`}
             >
-              Get Quote
+              {settings?.ctaButton?.label || "Get Quote"}
             </NavLink>
 
             <button
@@ -167,31 +161,25 @@ export default function Navbar({ forceDark = false }: { forceDark?: boolean }) {
           transform transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
           ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
         >
-          <NavLink href="/about" onClick={() => setMenuOpen(false)}>
-            About
-          </NavLink>
-          <NavLink href="/products" onClick={() => setMenuOpen(false)}>
-            Products
-          </NavLink>
-          <NavLink href="/projects" onClick={() => setMenuOpen(false)}>
-            Projects
-          </NavLink>
-          <NavLink href="/spaces" onClick={() => setMenuOpen(false)}>
-            Spaces
-          </NavLink>
-          <NavLink href="/insights" onClick={() => setMenuOpen(false)}>
-            Insights
-          </NavLink>
-          <NavLink href="/contact" onClick={() => setMenuOpen(false)}>
-            Contact
-          </NavLink>
+          {(settings?.mainNav || [
+            { label: "About", link: "/about" },
+            { label: "Products", link: "/products" },
+            { label: "Projects", link: "/projects" },
+            { label: "Spaces", link: "/spaces" },
+            { label: "Insights", link: "/insights" },
+            { label: "Contact", link: "/contact" }
+          ]).map((nav: { label: string; link: string }, i: number) => (
+            <NavLink key={i} href={nav.link || "#"} onClick={() => setMenuOpen(false)}>
+              {nav.label}
+            </NavLink>
+          ))}
 
           <NavLink
-            href="/get-quote"
+            href={settings?.ctaButton?.link || "/get-quote"}
             className="mt-6 px-8 py-3 border border-black/40 rounded-full hover:bg-black hover:text-white transition"
             onClick={() => setMenuOpen(false)}
           >
-            Get Quote
+            {settings?.ctaButton?.label || "Get Quote"}
           </NavLink>
 
           <button

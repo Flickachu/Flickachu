@@ -80,3 +80,28 @@ export const PROJECT_QUERY = defineQuery(`*[_type == "project" && slug.current =
   highlights,
   publishedAt
 }`);
+
+export const PAGE_QUERY = `*[_type == "page" && slug.current == "home"][0]{
+  title,
+  "sections": coalesce(sections, [])[]{
+    _type,
+    ...,
+    _type == "productGrid" => {
+      "products": coalesce(products[]->{
+        title,
+        "imageUrl": image.asset->url,
+        slug
+      }, [])
+    },
+    _type == "featuredProjectSection" => {
+      "project": project->{
+        title,
+        slug,
+        description,
+        hero
+      }
+    }
+  }
+}`;
+
+export const SETTINGS_QUERY = `*[_type == "siteSettings"][0]`;

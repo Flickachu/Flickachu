@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import NavLink from "./NavLink";
 
-export default function Footer() {
+export default function Footer({ settings }: { settings?: any }) {
   const pathname = usePathname();
   if (pathname.startsWith("/studio") || pathname.startsWith("/sanity")) return null;
 
@@ -18,12 +18,11 @@ export default function Footer() {
             href="/"
             className="cursive text-3xl leading-none tracking-wide mb-3 block"
           >
-            Laminate Gallery
+            {settings?.brandName || "Laminate Gallery"}
           </NavLink>
 
-          <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-            Crafting timeless interiors and bespoke furniture with a focus on detail,
-            materiality, and emotion.
+          <p className="text-sm text-gray-400 leading-relaxed max-w-xs whitespace-pre-wrap">
+            {settings?.footerDescription || "Crafting timeless interiors and bespoke furniture with a focus on detail,\nmateriality, and emotion."}
           </p>
         </div>
 
@@ -34,26 +33,18 @@ export default function Footer() {
           </p>
 
           <ul className="space-y-3 text-sm text-gray-300">
-            <li>
-              <NavLink href="/about" className="hover:text-white transition">
-                About
-              </NavLink>
-            </li>
-            <li>
-              <NavLink href="/products" className="hover:text-white transition">
-                Products
-              </NavLink>
-            </li>
-            <li>
-              <NavLink href="/projects" className="hover:text-white transition">
-                Projects
-              </NavLink>
-            </li>
-            <li>
-              <NavLink href="/insights" className="hover:text-white transition">
-                Insights
-              </NavLink>
-            </li>
+            {(settings?.studioLinks || [
+              { label: "About", link: "/about" },
+              { label: "Products", link: "/products" },
+              { label: "Projects", link: "/projects" },
+              { label: "Insights", link: "/insights" }
+            ]).map((nav: { label: string; link: string }, i: number) => (
+              <li key={i}>
+                <NavLink href={nav.link || "#"} className="hover:text-white transition">
+                  {nav.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -64,27 +55,17 @@ export default function Footer() {
           </p>
 
           <ul className="space-y-3 text-sm text-gray-300">
-            <li>
-              <NavLink href="/contact" className="hover:text-white transition">
-                Contact
-              </NavLink>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="hover:text-white transition"
-              >
-                Instagram
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="hover:text-white transition"
-              >
-                LinkedIn
-              </a>
-            </li>
+            {(settings?.connectLinks || [
+              { label: "Contact", link: "/contact" },
+              { label: "Instagram", link: "#" },
+              { label: "LinkedIn", link: "#" }
+            ]).map((nav: { label: string; link: string }, i: number) => (
+              <li key={i}>
+                <NavLink href={nav.link || "#"} className="hover:text-white transition">
+                  {nav.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -95,9 +76,9 @@ export default function Footer() {
           </p>
 
           <div className="text-sm text-gray-300 space-y-2">
-            <p>Pune, India</p>
-            <p>hello@laminategallery.com</p>
-            <p>+91 98765 43210</p>
+            <p>{settings?.address || "Pune, India"}</p>
+            <p>{settings?.email || "hello@laminategallery.com"}</p>
+            <p>{settings?.phone || "+91 98765 43210"}</p>
           </div>
         </div>
 
@@ -106,7 +87,7 @@ export default function Footer() {
       {/* DIVIDER */}
       <div className="border-t border-white/10 mt-16 pt-6 flex justify-between items-center text-sm text-gray-500">
 
-        <p>© 2026 Laminate Gallery. All rights reserved.</p>
+        <p>{settings?.copyrightText || "© 2026 Laminate Gallery. All rights reserved."}</p>
 
         <p className="hidden md:block">Designed & Developed by DesignXninja</p>
 
